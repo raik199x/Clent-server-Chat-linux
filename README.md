@@ -1,2 +1,2 @@
-# Clent-server-Chat-linux
+# Client-server-Chat-linux
 Course project for bsuir 4 semester
