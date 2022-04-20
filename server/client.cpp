@@ -1,61 +1,70 @@
-#include <iostream>
-#include <string>
+// Client side C/C++ program to demonstrate Socket
+// programming
+#include <arpa/inet.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <malloc.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <arpa/inet.h>
-#include <sys/socket.h>
-#include <netdb.h>
-#include <netinet/in.h>
-#include <errno.h>
-#include <cstring>
-#include <sys/types.h>
-
-#define DEFAULT_PORT 3002
-#define SERVER_IP "127.0.0.1"
-
-bool is_client_connection_close(const char*msg){
-    for(int i = 0; i < strlen(msg);i++)
-        if(msg[i] == '#')
-            return true;
-
-    return false;
+#define PORT 3002
+ 
+//return size of line
+int EnterMessage(char **message){
+    char *line; free((*message));
+    int line_size = 0, letter_num = 0; char letter;
+    line = (char*)malloc(1*sizeof(char));
+    while(1){
+        scanf("%c", &letter);
+        if(letter == '\0')
+            continue;
+        else if (letter == '\n'){
+            line[letter_num] = '\0';
+            break;
+        }
+        line[letter_num] = letter;
+        line_size+=2; letter_num++;
+        line = (char*)realloc(line, line_size);
+    }
+    (*message) = line;
+    return line_size;
 }
 
-int main(int argc, char *argv[]){
-    int client;
-
-    struct sockaddr_in server_address;
-
-    client = socket(AF_INET, SOCK_STREAM,0);
-    if (client == -1){
-        perror("failed to activate socket");
-        exit(-1);
+int main(int argc, char const* argv[])
+{
+    int sock = 0, valread;
+    struct sockaddr_in serv_addr;
+    char* hello = "Hello from client\0";
+    char buffer[1024] = { 0 };
+    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+        printf("\n Socket creation error \n");
+        return -1;
     }
-    std::cout << "LOG: socket ready\n";
-
-    server_address.sin_port = htons(DEFAULT_PORT);
-    server_address.sin_family = AF_INET;
-    inet_pton(AF_INET, SERVER_IP, &server_address.sin_addr);
-    
-    std::cout << "\n=> client socket created.";
-
-    int ret = connect(client, reinterpret_cast<const struct sockaddr*>(&server_address),sizeof(server_address));
-    if (ret == 0){
-        perror("connect failed");
-        exit(-1);
+ 
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(PORT);
+ 
+    // Convert IPv4 and IPv6 addresses from text to binary
+    // form
+    if (inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr)
+        <= 0) {
+        printf(
+            "\nInvalid address/ Address not supported \n");
+        return -1;
     }
-
-std::cout << "Waiting for server confirmation\n";
-char buffer[255];
-recv(client,buffer,255,0);
-std::cout << "Connection established\nTo end connection sed #\n";
-
-while(true){
-    std::cin.getline(buffer,255,0);
-    send(client,buffer,255,0);
-    if(is_client_connection_close(buffer))
-        break;
-}
-    std::cout << "goodbye\n";
+ 
+    if (connect(sock, (struct sockaddr*)&serv_addr,
+                sizeof(serv_addr))
+        < 0) {
+        printf("\nConnection Failed \n");
+        return -1;
+    }
+    send(sock, hello, strlen(hello), 0);
+    printf("Hello message sent\n");
+    char *LineSend; LineSend = (char*)malloc(2); LineSend[0] = '1';
+    while(LineSend[0] != '#'){
+        int size = EnterMessage(&LineSend);
+        send(sock,LineSend,size,0);
+    }
     return 0;
 }

@@ -1,75 +1,55 @@
-#include <iostream>
-#include <string>
-#include <stdlib.h>
-#include <unistd.h>
-#include <arpa/inet.h>
-#include <sys/socket.h>
-#include <netdb.h>
+// Server side C/C++ program to demonstrate Socket
+// programming
 #include <netinet/in.h>
-#include <errno.h>
-#include <cstring>
-#include <sys/types.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <unistd.h>
+#include <pthread.h>
+#define PORT 3002
+int main(int argc, char const* argv[]){
+    int server_fd, new_socket, valread;
+    struct sockaddr_in address;
+    int opt = 1;
+    int addrlen = sizeof(address);
+    char buffer[1024] = { 0 };
+    char* hello = "Hello from server";
+    pthread_t *ClientsOnServer;
 
-#define DEFAULT_PORT 3002
-
-// 1 создать сокет
-// 2 bind объединить с портом+авйпи
-// 3 listen Запустить сокет на слушание порта
-// 4 если кто-то присоединился accept
-// 5 recv recive общение
-
-bool is_client_connection_close(const char*msg){
-    for(int i = 0; i < strlen(msg);i++)
-        if(msg[i] == '#')
-            return true;
-
-    return false;
-}
-
-int main(int argc, char *argv[]){
-    int client,server;
-
-    struct sockaddr_in server_address;
-
-    client = socket(AF_INET, SOCK_STREAM,0);
-    if (client == -1){
-        perror("failed to activate socket");
-        exit(-1);
+    // Creating socket file descriptor
+    if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
+        perror("socket failed");
+        exit(EXIT_FAILURE);
     }
-    std::cout << "LOG: socket ready\n";
-
-    server_address.sin_port = htons(DEFAULT_PORT);
-    server_address.sin_family = AF_INET;
-    server_address.sin_addr.s_addr = htons(INADDR_ANY);
-
-    int ret = bind(client,reinterpret_cast<struct sockaddr*>(&server_address), sizeof(server_address));
-    if (ret == -1){
-        perror("Bind failed");
-        exit(-1);
+ 
+    // Forcefully attaching socket to the port 8080
+    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))) {
+        perror("setsockopt");
+        exit(EXIT_FAILURE);
     }
-
-    socklen_t size = sizeof(server_address);
-    std::cout << "LOG: server listening clients..\n";
-    listen(client,1);
-
-    server = accept(client, reinterpret_cast<struct sockaddr*>(&server_address), &size);
-    if (server == -1){
-        perror("Listening failed");
-        exit(-1);
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = INADDR_ANY;
+    address.sin_port = htons(PORT);
+ 
+    // Forcefully attaching socket to the port
+    if (bind(server_fd, (struct sockaddr*)&address, sizeof(address)) < 0) {
+        perror("bind failed");
+        exit(EXIT_FAILURE);
     }
-
-    char buffer[255];
-    while(server > 0){
-         strcpy(buffer,"-> Server connected!\n");
-         send(server,buffer,255,0);
-         std::cout << "=> Connected to the client" << std::endl;
-         std:: cout << "send # to disconect user\n" << std::endl;
-         recv(server,buffer,255,0);
-         std::cout << buffer << std::endl;
-         if(is_client_connection_close(buffer) == true)
-            break;
-         
+    if (listen(server_fd, 3) < 0) {
+        perror("listen");
+        exit(EXIT_FAILURE);
     }
-
-    return 1;
+    if ((new_socket = accept(server_fd, (struct sockaddr*)&address, (socklen_t*)&addrlen)) < 0) {
+        perror("accept");
+        exit(EXIT_FAILURE);
+    }
+    valread = read(new_socket, buffer, 1024);
+    printf("%s\n", buffer);
+    while(buffer[0] != '#'){
+        valread = recv(new_socket, buffer, 255, 0);
+        printf("%s\n",buffer);
+    }
+    return 0;
 }

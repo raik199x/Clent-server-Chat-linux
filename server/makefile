@@ -1,9 +1,5 @@
 all:
-	g++ server.cpp -o server
-	g++ client.cpp -o client
-server:
-	g++ server.cpp -o server
-client:
+	g++ server.cpp -o server -pthread
 	g++ client.cpp -o client
 clear:
 	rm -rf server
