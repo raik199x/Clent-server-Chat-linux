@@ -14,6 +14,7 @@ int EnterMessage(char **message){
     char *line; free((*message));
     int line_size = 0, letter_num = 0; char letter;
     line = (char*)malloc(1*sizeof(char));
+    printf("Send: ");
     while(1){
         scanf("%c", &letter);
         if(letter == '\0')
@@ -34,7 +35,6 @@ int main(int argc, char const* argv[])
 {
     int sock = 0, valread;
     struct sockaddr_in serv_addr;
-    char* hello = "Hello from client\0";
     char buffer[1024] = { 0 };
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         printf("\n Socket creation error \n");
@@ -45,7 +45,6 @@ int main(int argc, char const* argv[])
     serv_addr.sin_port = htons(PORT);
  
     // Convert IPv4 and IPv6 addresses from text to binary
-    // form
     if (inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr)
         <= 0) {
         printf(
@@ -53,14 +52,10 @@ int main(int argc, char const* argv[])
         return -1;
     }
  
-    if (connect(sock, (struct sockaddr*)&serv_addr,
-                sizeof(serv_addr))
-        < 0) {
+    if (connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0) {
         printf("\nConnection Failed \n");
         return -1;
     }
-    send(sock, hello, strlen(hello), 0);
-    printf("Hello message sent\n");
     char *LineSend; LineSend = (char*)malloc(2); LineSend[0] = '1';
     while(LineSend[0] != '#'){
         int size = EnterMessage(&LineSend);

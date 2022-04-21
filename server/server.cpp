@@ -8,15 +8,36 @@
 #include <unistd.h>
 #include <pthread.h>
 #define PORT 3002
-int main(int argc, char const* argv[]){
-    int server_fd, new_socket, valread;
-    struct sockaddr_in address;
-    int opt = 1;
-    int addrlen = sizeof(address);
-    char buffer[1024] = { 0 };
-    char* hello = "Hello from server";
-    pthread_t *ClientsOnServer;
 
+struct sockaddr_in address;
+int addrlen = sizeof(address);
+int *ActiveClients, NumberClients = 0;
+
+void *WorkingWithClient(void *arg){
+    int *client = (int *)arg;
+
+    char *buffer = (char*)malloc(sizeof(char)); buffer[0] = '1';
+    while(buffer[0] != '#'){
+        free(buffer);
+        buffer = (char*)malloc(255);
+        recvfrom((*client), buffer, 255, 0,(struct sockaddr*)&address, (socklen_t*)&addrlen);
+        if(buffer[0] == '\0')
+            continue;
+        printf("message: %s\n",buffer);
+    }
+    free(buffer);
+    printf("Client exited\n");
+    (*client) = -1;
+    close((*client));
+    pthread_exit(NULL);
+}
+
+int main(int argc, char const* argv[]){
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++DATA SEG
+    int server_fd, valread;
+    int opt = 1;
+    pthread_t *ClientsOnServer = (pthread_t*)malloc(sizeof(pthread_t));
+    //----------------------------------------------------DATA SEG
     // Creating socket file descriptor
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
         perror("socket failed");
@@ -37,19 +58,24 @@ int main(int argc, char const* argv[]){
         perror("bind failed");
         exit(EXIT_FAILURE);
     }
-    if (listen(server_fd, 3) < 0) {
-        perror("listen");
-        exit(EXIT_FAILURE);
+    
+    while(1){
+        if (listen(server_fd, 3) < 0) {
+            perror("listen");
+            exit(EXIT_FAILURE);
+        }
+        NumberClients++;
+        ActiveClients = (int*)realloc(ActiveClients,sizeof(int)*NumberClients);
+        if ((ActiveClients[NumberClients-1] = accept(server_fd, (struct sockaddr*)&address, (socklen_t*)&addrlen)) < 0) {
+            perror("accept");
+            exit(EXIT_FAILURE);
+        }
+
+        printf("Server Log: New client arrived\n");
+
+        ClientsOnServer = (pthread_t*)realloc(ClientsOnServer,sizeof(pthread_t)*NumberClients);
+        pthread_create(&ClientsOnServer[NumberClients-1],NULL,&WorkingWithClient,&ActiveClients[NumberClients-1]);
     }
-    if ((new_socket = accept(server_fd, (struct sockaddr*)&address, (socklen_t*)&addrlen)) < 0) {
-        perror("accept");
-        exit(EXIT_FAILURE);
-    }
-    valread = read(new_socket, buffer, 1024);
-    printf("%s\n", buffer);
-    while(buffer[0] != '#'){
-        valread = recv(new_socket, buffer, 255, 0);
-        printf("%s\n",buffer);
-    }
+
     return 0;
 }

@@ -32,5 +32,7 @@
 *.app
 
 #binaries
-client
 server
+
+#todo ext
+.todo
