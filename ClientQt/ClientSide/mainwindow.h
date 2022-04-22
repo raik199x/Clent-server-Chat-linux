@@ -15,6 +15,15 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void on_LoginWrite_textEdited(const QString &arg1);
+
+    void on_PasswordWrite_textEdited(const QString &arg1);
+
+    void on_Register_clicked();
+
+    void on_Login_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

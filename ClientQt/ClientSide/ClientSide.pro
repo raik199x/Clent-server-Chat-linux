@@ -9,14 +9,26 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    chat.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    recoverdata.cpp \
+    recoveryconfirmation.cpp \
+    register.cpp
 
 HEADERS += \
-    mainwindow.h
+    chat.h \
+    mainwindow.h \
+    recoverdata.h \
+    recoveryconfirmation.h \
+    register.h
 
 FORMS += \
-    mainwindow.ui
+    chat.ui \
+    mainwindow.ui \
+    recoverdata.ui \
+    recoveryconfirmation.ui \
+    register.ui
 
 TRANSLATIONS += \
     ClientSide_en_US.ts
