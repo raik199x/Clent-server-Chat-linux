@@ -4,9 +4,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/socket.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <dirent.h>
+#include <errno.h>
+
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+
 #define PORT 3002
 
 struct sockaddr_in address;
@@ -32,7 +38,31 @@ void *WorkingWithClient(void *arg){
     pthread_exit(NULL);
 }
 
+int CheckAllFiles(){
+    DIR* dir = opendir("database");
+    if (dir)
+        closedir(dir);
+    else if (ENOENT == errno) {
+        int check = mkdir("database",S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+        if(check){
+            printf("Error creating folder!\n");
+            return -1;
+        }
+    }else {
+        printf("Unexpected error: Cannot check existing file\n");
+        return -1;
+    }
+    FILE *file = fopen("database/accounts.txt","r+");
+    if(!file)
+        file = fopen("database/accounts.txt","w");
+    fclose(file);
+    return 0;
+}
+
 int main(int argc, char const* argv[]){
+    //preparations
+    if(CheckAllFiles() != 0)
+        return -1;
     //++++++++++++++++++++++++++++++++++++++++++++++++++++DATA SEG
     int server_fd, valread;
     int opt = 1;

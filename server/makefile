@@ -1,6 +1,6 @@
 all:
-	g++ server.cpp -o server -pthread
+	gcc server.c -o server -pthread
 debug:
-	g++ server.cpp -o server -pthread -g
+	gcc server.c -o server -pthread -g
 clear:
 	rm -rf server
