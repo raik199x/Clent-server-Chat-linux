@@ -13,6 +13,7 @@ class RecoveryConfirmation : public QDialog
 
 public:
     explicit RecoveryConfirmation(QWidget *parent = nullptr);
+    RecoveryConfirmation(QWidget *parent = nullptr, QString info ="NO RESPONSE CONTACT THE DEVELOPER");
     ~RecoveryConfirmation();
 
 private slots:

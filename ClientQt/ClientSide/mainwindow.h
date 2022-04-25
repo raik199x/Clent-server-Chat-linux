@@ -24,6 +24,8 @@ private slots:
 
     void on_Login_clicked();
 
+    void on_Recover_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

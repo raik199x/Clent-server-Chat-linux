@@ -17,6 +17,19 @@ RecoveryConfirmation::RecoveryConfirmation(QWidget *parent) :
     ui->RecoveryKey->setText("Test text");
 }
 
+RecoveryConfirmation::RecoveryConfirmation(QWidget *parent, QString info) :
+    QDialog(parent),
+    ui(new Ui::RecoveryConfirmation)
+{
+    ui->setupUi(this);
+    setWindowTitle(tr("Recovery info"));
+    setStyleSheet("color: #00FFFF; background-color: #2F4F4F");
+    ui->textEdit->setReadOnly(true);
+
+    ui->RecoveryKey->setReadOnly(true);
+    ui->RecoveryKey->setText(info);
+}
+
 RecoveryConfirmation::~RecoveryConfirmation()
 {
     delete ui;

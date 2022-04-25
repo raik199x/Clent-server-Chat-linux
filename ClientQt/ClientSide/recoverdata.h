@@ -15,6 +15,9 @@ public:
     explicit RecoverData(QWidget *parent = nullptr);
     ~RecoverData();
 
+private slots:
+    void on_back_clicked();
+
 private:
     Ui::RecoverData *ui;
 };

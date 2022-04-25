@@ -6,9 +6,16 @@ RecoverData::RecoverData(QWidget *parent) :
     ui(new Ui::RecoverData)
 {
     ui->setupUi(this);
+    this->setStyleSheet("color: #00FFFF; background-color: #2F4F4F");
+    setWindowTitle(tr("Recover data"));
 }
 
 RecoverData::~RecoverData()
 {
     delete ui;
 }
+
+void RecoverData::on_back_clicked(){
+    close();
+}
+

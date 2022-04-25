@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "recoverdata.h"
 #include "register.h"
 #include "ui_mainwindow.h"
 #include <QDebug>
@@ -66,7 +67,19 @@ void MainWindow::on_Login_clicked(){
         QMessageBox::critical(this,QObject::tr("Error"), QObject::tr("Nickname can't contain spaces"));
         ui->LoginWrite->setStyleSheet("color: #F08080");
         return;
+    } else if (ui->PasswordWrite->text().isEmpty() == true){
+        QMessageBox::critical(this,QObject::tr("Error"), QObject::tr("Empty password"));
+        ui->PasswordWrite->setStyleSheet("color: #F08080");
+        return;
     }
     qDebug() << Login;
+}
+
+
+void MainWindow::on_Recover_clicked(){
+    RecoverData *window = new RecoverData;
+    window->setModal(true);
+    window->exec();
+    delete window;
 }
 
