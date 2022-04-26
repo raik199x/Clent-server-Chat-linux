@@ -36,3 +36,6 @@ server
 
 #todo ext
 .todo
+
+#generated folder
+database

@@ -70,6 +70,14 @@ void MainWindow::on_Login_clicked(){
         QMessageBox::critical(this,QObject::tr("Error"), QObject::tr("Empty password"));
         ui->PasswordWrite->setStyleSheet("color: #F08080");
         return;
+    } else if(ui->LoginWrite->text().contains(':') == true || ui->LoginWrite->text().contains('~') == true){
+        QMessageBox::critical(this,QObject::tr("Error"), QObject::tr("Nickname contains forbidden symbols '~:'"));
+        ui->LoginWrite->setStyleSheet("color: #F08080");
+        return;
+    } else if(ui->PasswordWrite->text().contains(':') == true || ui->PasswordWrite->text().contains('~') == true){
+        QMessageBox::critical(this,QObject::tr("Error"), QObject::tr("Passwords contains forbidden symbols '~:"));
+        ui->PasswordWrite->setStyleSheet("color: #F08080");
+        return;
     }
     qDebug() << Login;
 }

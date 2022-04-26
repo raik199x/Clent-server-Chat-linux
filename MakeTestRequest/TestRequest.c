@@ -11,6 +11,7 @@
  
 //return size of line
 int EnterMessage(char **message){
+    rewind(stdin);
     char *line; free((*message));
     int line_size = 0, letter_num = 0; char letter;
     line = (char*)malloc(1*sizeof(char));
@@ -57,8 +58,9 @@ int main(int argc, char const* argv[])
         return -1;
     }
     char *LineSend; LineSend = (char*)malloc(2);
-    printf("Request: %s\n",LineSend);
     int size = EnterMessage(&LineSend);
+    puts("");
+    printf("Request: %s\n",LineSend);
     send(sock,LineSend,size,0);
     recv(sock,LineSend,1000,0);
     printf("Response: %s",LineSend);

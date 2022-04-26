@@ -37,18 +37,24 @@ void Register::on_Confirm_clicked(){
     } else if(ui->PasswordWrite->text() != ui->RepPaswwordWrite->text()){
         QMessageBox::critical(this,QObject::tr("Error"), QObject::tr("Passwords are not equal"));
         return;
+    } else if(ui->NichnameWrite->text().contains(':') == true || ui->NichnameWrite->text().contains('~') == true){
+        QMessageBox::critical(this,QObject::tr("Error"), QObject::tr("Nickname contains forbidden symbols '~:'"));
+        return;
+    } else if(ui->PasswordWrite->text().contains(':') == true || ui->PasswordWrite->text().contains('~') == true){
+        QMessageBox::critical(this,QObject::tr("Error"), QObject::tr("Passwords contains forbidden symbols '~:"));
+        return;
     }
     QString response;
 
     //asking server for registration
-    int RegSocket;
+    int RegSocket = -1;
     if((RegSocket = socket(AF_INET, SOCK_STREAM, 0)) < 0){
         QMessageBox::critical(this,QObject::tr("Error"), QObject::tr("Client error: cant create socket"));
         return;
     }
     struct sockaddr_in server_adress;
     server_adress.sin_family = AF_INET;
-    server_adress.sin_port = 3002;
+    server_adress.sin_port = htons(3002);
 
     //Convert IPv4 and IPv6 addresses from text to binary
     if (inet_pton(AF_INET, "127.0.0.1", &server_adress.sin_addr) <= 0){
@@ -67,19 +73,28 @@ void Register::on_Confirm_clicked(){
     send_to_server[1] = 'E';
     send_to_server[2] = 'G';
     int i = 3;
+    QString Nickname = ui->NichnameWrite->text();
+    QString Pass = ui->PasswordWrite->text();
     for(int j = 0; j < ui->NichnameWrite->text().size();j++)
-        send_to_server[i++] = ui->NichnameWrite->text()[j].toLatin1();
+        send_to_server[i++] = Nickname[j].toLatin1();
     send_to_server[i++] = ':';
     for(int j = 0; j < ui->PasswordWrite->text().size();j++)
-        send_to_server[i++] = ui->PasswordWrite->text()[j].toLatin1();
+        send_to_server[i++] = Pass[j].toLatin1();
     send_to_server[i] = '\0';
     send(RegSocket,send_to_server,bytes,0);
     delete []send_to_server;
-    recv(RegSocket,send_to_server,500,0);
+    send_to_server = new char[202];
+    recv(RegSocket,send_to_server,202,0);
 
     for(int i = 0;send_to_server[i] != '\0';i++)
-        response[i] = send_to_server[i];
-
+        response.append(send_to_server[i]);
+    if(response == "exist"){
+        QMessageBox::warning(this,QObject::tr("Warning"), QObject::tr("User with this nickname is already exist"));
+        return;
+    } else if (response == "critical"){
+        QMessageBox::warning(this,QObject::tr("Warning"), QObject::tr("Server error: get critical response, please try again later or contact the developer"));
+        return;
+    }
     RecoveryConfirmation *window = new RecoveryConfirmation(nullptr,response);
     window->setModal(true);
     window->exec();

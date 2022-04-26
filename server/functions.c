@@ -104,3 +104,15 @@ void PressEnterContinue(){
     free(line);
     return;
 }
+
+void RawStringToCharPointer(char **ReturnValue,char *RawString){
+    int size = 0;
+    for(int i = 0; RawString[i] != '\0';i++)
+        size++;
+    (*ReturnValue) = (char*)malloc(size+1);
+    size = 0;
+    do{
+        (*ReturnValue)[size] = RawString[size];
+        size++;
+    }while(RawString[size] != '\0');
+}
