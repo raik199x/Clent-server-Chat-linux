@@ -22,12 +22,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     setWindowTitle(tr("Logging menu"));
     ui->LoginWrite->setMaxLength(16);
+    ui->PasswordWrite->setMaxLength(100);
 }
 
 MainWindow::~MainWindow(){
     delete ui;
 }
-
 
 void MainWindow::on_LoginWrite_textEdited(const QString &arg1){
     if(arg1.isEmpty() == true)
@@ -44,7 +44,6 @@ void MainWindow::on_PasswordWrite_textEdited(const QString &arg1){
         ui->PasswordWrite->setStyleSheet("color: #00FFFF");
 
 }
-
 
 void MainWindow::on_Register_clicked(){
     Register *RegWindow = new Register;

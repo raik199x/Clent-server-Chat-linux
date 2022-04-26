@@ -12,6 +12,9 @@ Register::Register(QWidget *parent) :
     ui->setupUi(this);
     this->setStyleSheet("color: #00FFFF; background-color: #2F4F4F");
     setWindowTitle(tr("Register menu"));
+    ui->NichnameWrite->setMaxLength(16);
+    ui->PasswordWrite->setMaxLength(100);
+    ui->RepPaswwordWrite->setMaxLength(100);
 }
 
 Register::~Register(){

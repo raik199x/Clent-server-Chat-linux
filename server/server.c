@@ -13,6 +13,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#include "functions.h"
+
 #define PORT 3002
 
 struct sockaddr_in address;
@@ -53,10 +55,117 @@ int CheckAllFiles(){
         return -1;
     }
     FILE *file = fopen("database/accounts.txt","r+");
-    if(!file)
+    if(!file){
         file = fopen("database/accounts.txt","w");
+        fprintf(file,"\0");
+    }
+    fclose(file);
+    file = fopen("database/recovery_keys.txt","r+");
+    if(!file){
+        file = fopen("database/recovery_keys.txt","w");
+        fprintf(file,"\0");
+    }
     fclose(file);
     return 0;
+}
+
+char *GenerateRecoveryKey(){
+    char *RecKey = (char*)malloc(201);
+    for(int i = 0; i < 200;i++){
+        unsigned int temp = rand()%26+1;
+        RecKey[i] = temp+96;
+    }
+    if(RecKey[0] = 'b' && RecKey[1] == 'a' && RecKey[2] == 'd')
+        RecKey = GenerateRecoveryKey();
+    //now we need to write + check recovery keys
+    FILE *RecKeys = fopen("database/recovery_keys.txt","r+");
+    if(!RecKeys){
+        SetOutputColor("RED");
+        printf("CRITICAL ERROR: file 'database/recovery_keys.txt' is not found!\n");
+        SetOutputColor("def");
+        return "bad\0";
+    }
+    char LetterFromFile = '1'; unsigned int i = 0;
+    while(LetterFromFile != '\0'){
+        fscanf(RecKeys,"%c",&LetterFromFile);
+        if(LetterFromFile != RecKey[i++]){
+            i = 0;
+            while(LetterFromFile != '\n')
+                fscanf(RecKeys,"%c",&LetterFromFile);
+        } else if(LetterFromFile == '\n'){
+            SetOutputColor("YELLOW");
+            printf("WARNING: recovery key function generate existing key\n");
+            SetOutputColor("def");
+            return "rep\0";
+        }
+    }
+    //if all checkers are passed
+    fpos_t temp;
+    fgetpos(RecKeys,&temp);
+    fseek(RecKeys,-1,SEEK_CUR);
+    for(int i = 0;i < 199;i++)
+        fprintf(RecKeys,"%c",RecKey[i]);
+    fprintf(RecKeys,"\n\0");
+    return RecKey;
+}
+
+char* RegisterClient(const char *data){
+    char *Nickname, *Password, *RecoveryKey;
+    Nickname = (char*)malloc(17);
+    Password = (char*)malloc(101);
+
+    //Parse login + password
+    unsigned int i = 3, j = 0;
+    for(j = 0; data[i] != ':';i++,j++)
+        Nickname[j] = data[i];
+    Nickname[++j] = '\0'; i++;
+    for(j = 0; data[i] != '\0'; i++,j++)
+        Password[j] = data[i];
+    Password[++j] = '\0';
+
+    //running through file and check if such username is already taken
+    FILE *ClientsData = fopen("database/accounts.txt","r+");
+    if(!ClientsData){
+        SetOutputColor("RED");
+        printf("CRITICAL ERROR: file 'database/accounts.txt' is not found!\n");
+        SetOutputColor("def");
+        free(Nickname); free(Password);
+        return "critical\0";
+    }
+
+    char LetterFromFile = '1'; i = 0;
+    while(LetterFromFile != '\0'){
+        fscanf(ClientsData,"%c",&LetterFromFile);
+        //if nickname is not equal to our new
+        if(LetterFromFile != Nickname[i++]){
+            //we simply skip the whole line
+            while(LetterFromFile != '\n')
+                fscanf(ClientsData,"%c",&LetterFromFile);
+            i=0;
+        }
+        //if such nickname already exist
+        else if(LetterFromFile == ':'){
+            SetOutputColor("YELLOW");
+            printf("WARNING: some client tried to register with an existing nickname\n");
+            SetOutputColor("def");
+            free(Nickname); free(Password);
+            return "exist\0";
+        }
+    }
+    //if we decided to register client we go back by one symbol
+    fpos_t temp; fgetpos(ClientsData, &temp);
+    fseek(ClientsData,-1,SEEK_CUR);
+    //writting new data
+    i = 0;
+    while(data[i] != '\0')
+        fprintf(ClientsData,"%c",data[i]);
+    fprintf(ClientsData,"\n\0");
+    fclose(ClientsData);            //end working with client credintals
+
+    RecoveryKey = GenerateRecoveryKey(); //generating recovery key;
+    //add error handling
+    free(Nickname); free(Password);
+    return RecoveryKey;
 }
 
 int main(int argc, char const* argv[]){
@@ -90,10 +199,30 @@ int main(int argc, char const* argv[]){
     }
     
     while(1){
+        char *buffer; int WaitClient;
         if (listen(server_fd, 3) < 0) {
-            perror("listen");
-            exit(EXIT_FAILURE);
+            SetOutputColor("RED");
+            printf("Client listen error!\n");
+            SetOutputColor("def");
+            continue;
         }
+        if(WaitClient = accept(server_fd, (struct sockaddr*)&address,(socklen_t*)&addrlen) < 0){
+            SetOutputColor("RED");
+            printf("Client connection error!\n");
+            SetOutputColor("def");
+            continue;
+        }
+
+        recv(server_fd,buffer,1000,0);
+        //client asks for registration
+        if(buffer[0] == 'R' && buffer[1] == 'E' && buffer[2] == 'G'){
+            char *response;
+            response = RegisterClient(buffer);
+            send(WaitClient,response,202,0);
+            free(response);
+            continue;
+        }
+        /*  Simple server connect implementation;
         NumberClients++;
         ActiveClients = (int*)realloc(ActiveClients,sizeof(int)*NumberClients);
         if ((ActiveClients[NumberClients-1] = accept(server_fd, (struct sockaddr*)&address, (socklen_t*)&addrlen)) < 0) {
@@ -105,6 +234,7 @@ int main(int argc, char const* argv[]){
 
         ClientsOnServer = (pthread_t*)realloc(ClientsOnServer,sizeof(pthread_t)*NumberClients);
         pthread_create(&ClientsOnServer[NumberClients-1],NULL,&WorkingWithClient,&ActiveClients[NumberClients-1]);
+        */
     }
 
     return 0;

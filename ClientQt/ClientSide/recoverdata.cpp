@@ -8,6 +8,7 @@ RecoverData::RecoverData(QWidget *parent) :
     ui->setupUi(this);
     this->setStyleSheet("color: #00FFFF; background-color: #2F4F4F");
     setWindowTitle(tr("Recover data"));
+    ui->recoverykey->setMaxLength(100);
 }
 
 RecoverData::~RecoverData()
