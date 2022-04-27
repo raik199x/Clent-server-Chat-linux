@@ -1,5 +1,4 @@
-// Client side C/C++ program to demonstrate Socket
-// programming
+//Program to test requests without client ui
 #include <arpa/inet.h>
 #include <stdio.h>
 #include <string.h>
