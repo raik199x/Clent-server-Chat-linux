@@ -17,6 +17,7 @@
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpacerItem>
+#include <QtWidgets/QTextEdit>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
@@ -31,7 +32,7 @@ public:
     QLabel *label;
     QLineEdit *recoverykey;
     QSpacerItem *horizontalSpacer;
-    QSpacerItem *verticalSpacer;
+    QTextEdit *textEdit;
     QHBoxLayout *horizontalLayout;
     QSpacerItem *horizontalSpacer_2;
     QPushButton *Confirm;
@@ -67,9 +68,10 @@ public:
 
         verticalLayout_2->addLayout(verticalLayout);
 
-        verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Fixed);
+        textEdit = new QTextEdit(verticalLayoutWidget_2);
+        textEdit->setObjectName(QString::fromUtf8("textEdit"));
 
-        verticalLayout_2->addItem(verticalSpacer);
+        verticalLayout_2->addWidget(textEdit);
 
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));

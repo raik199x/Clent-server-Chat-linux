@@ -1,3 +1,4 @@
+//standart C libs
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -11,8 +12,9 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-
+//Server libs
 #include "RegisterLogic/RegisterRequest.h"
+#include "RecoveryLogic/RecoveryRequest.h"
 #include "functions.h"
 
 #define PORT 3002
@@ -140,13 +142,21 @@ int main(int argc, char const* argv[]){
             send(WaitClient,response,202,0);
             free(response);
             continue;
-        } else{
+        } else if(buffer[0] == 'R' && buffer[1] == 'E' && buffer[2] == 'C'){
+            //critical woun't be handled because i need to rework it
+            char *response;
+            response = RecoverClient(buffer);
+            send(WaitClient,response,300,0);
+            free(response);
+            continue;
+        } else { 
             SetOutputColor("YELLOW");
             printf("WARNING: server get unknown request --- %s\n",buffer);
             SetOutputColor("def");
             buffer[0] = 'B'; buffer[1] = 'A'; buffer[2] = 'D'; buffer[3] = '\0';
             send(WaitClient,buffer,4,0);
             close(WaitClient);
+            continue;
         }
         free(buffer);
         /*  Simple server connect implementation;
