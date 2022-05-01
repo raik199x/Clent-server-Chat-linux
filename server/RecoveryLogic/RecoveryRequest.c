@@ -5,13 +5,6 @@
 char *RecoverClient(const char *RecKey){
     FILE *file = fopen("database/recovery_keys.txt","r+");
     char *response;
-    if(!file){
-        SetOutputColor("RED");
-        printf("CRITICAL ERROR: file recovery_keys.txt is not found!\n");
-        SetOutputColor("def");
-        RawStringToCharPointer(&response,"critical\0");
-        return response;
-    }
     //finding key
     char LetterFromFile = '1'; unsigned int i = 3; unsigned long long FileLine = 0;
     while(LetterFromFile != '~'){
@@ -37,8 +30,7 @@ char *RecoverClient(const char *RecKey){
     //if key was found, time to read data from file
     fclose(file);
     file = fopen("database/accounts.txt","r+");
-    //there should be checker but in future i need to rework all checkers
-    //so now i mind that file is opened
+
     LetterFromFile = '1';
     //running through data to find needed creditals
     for(unsigned long long j = 0; j != FileLine;){

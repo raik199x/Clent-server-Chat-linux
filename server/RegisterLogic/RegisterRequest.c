@@ -18,15 +18,7 @@ char *GenerateRecoveryKey(){
         RecKey = GenerateRecoveryKey();
     //now we need to write + check recovery keys
     FILE *RecKeys = fopen("database/recovery_keys.txt","r+");
-    if(!RecKeys){
-        //there is no instructions for registered login+pass
-        SetOutputColor("RED");
-        printf("CRITICAL ERROR: file 'database/recovery_keys.txt' is not found!\n");
-        SetOutputColor("def");
-        free(RecKey);
-        RawStringToCharPointer(&response,"bad\0");
-        return response;
-    }
+
     char LetterFromFile = '1'; unsigned int i = 0;
     while(LetterFromFile != '~'){
         fscanf(RecKeys,"%c",&LetterFromFile);
@@ -72,14 +64,6 @@ char* RegisterClient(const char *data){
 
     //running through file and check if such username is already taken
     FILE *ClientsData = fopen("database/accounts.txt","r+");
-    if(!ClientsData){
-        SetOutputColor("RED");
-        printf("CRITICAL ERROR: file 'database/accounts.txt' is not found!\n");
-        SetOutputColor("def");
-        free(Nickname); free(Password);
-        RawStringToCharPointer(&response,"critical\0");
-        return response;
-    }
 
     char LetterFromFile = '1'; i = 0;
     while(LetterFromFile != '~'){
