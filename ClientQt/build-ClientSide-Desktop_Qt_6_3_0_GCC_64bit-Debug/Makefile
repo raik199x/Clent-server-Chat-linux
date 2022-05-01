@@ -57,7 +57,8 @@ SOURCES       = ../ClientSide/chat.cpp \
 		../ClientSide/mainwindow.cpp \
 		../ClientSide/recoverdata.cpp \
 		../ClientSide/recoveryconfirmation.cpp \
-		../ClientSide/register.cpp qrc_qmake_qmake_qm_files.cpp \
+		../ClientSide/register.cpp qrc_Images.cpp \
+		qrc_qmake_qmake_qm_files.cpp \
 		moc_chat.cpp \
 		moc_mainwindow.cpp \
 		moc_recoverdata.cpp \
@@ -69,6 +70,7 @@ OBJECTS       = chat.o \
 		recoverdata.o \
 		recoveryconfirmation.o \
 		register.o \
+		qrc_Images.o \
 		qrc_qmake_qmake_qm_files.o \
 		moc_chat.o \
 		moc_mainwindow.o \
@@ -325,6 +327,7 @@ DIST          = ../../../../Qt/6.3.0/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../../Qt/6.3.0/gcc_64/mkspecs/features/qt_config.prf \
 		../../../../Qt/6.3.0/gcc_64/mkspecs/linux-g++/qmake.conf \
 		../../../../Qt/6.3.0/gcc_64/mkspecs/features/spec_post.prf \
+		../ClientSide/.qmake.stash \
 		../../../../Qt/6.3.0/gcc_64/mkspecs/features/exclusive_builds.prf \
 		../../../../Qt/6.3.0/gcc_64/mkspecs/features/toolchain.prf \
 		../../../../Qt/6.3.0/gcc_64/mkspecs/features/default_pre.prf \
@@ -617,6 +620,7 @@ Makefile: ../ClientSide/ClientSide.pro ../../../../Qt/6.3.0/gcc_64/mkspecs/linux
 		../../../../Qt/6.3.0/gcc_64/mkspecs/features/qt_config.prf \
 		../../../../Qt/6.3.0/gcc_64/mkspecs/linux-g++/qmake.conf \
 		../../../../Qt/6.3.0/gcc_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		../../../../Qt/6.3.0/gcc_64/mkspecs/features/exclusive_builds.prf \
 		../../../../Qt/6.3.0/gcc_64/mkspecs/features/toolchain.prf \
 		../../../../Qt/6.3.0/gcc_64/mkspecs/features/default_pre.prf \
@@ -639,6 +643,7 @@ Makefile: ../ClientSide/ClientSide.pro ../../../../Qt/6.3.0/gcc_64/mkspecs/linux
 		../../../../Qt/6.3.0/gcc_64/mkspecs/features/yacc.prf \
 		../../../../Qt/6.3.0/gcc_64/mkspecs/features/lex.prf \
 		../ClientSide/ClientSide.pro \
+		../ClientSide/Images.qrc \
 		qmake_qmake_qm_files.qrc \
 		../../../../Qt/6.3.0/gcc_64/lib/libQt6Widgets.prl \
 		../../../../Qt/6.3.0/gcc_64/lib/libQt6Gui.prl \
@@ -894,6 +899,7 @@ Makefile: ../ClientSide/ClientSide.pro ../../../../Qt/6.3.0/gcc_64/mkspecs/linux
 ../../../../Qt/6.3.0/gcc_64/mkspecs/features/qt_config.prf:
 ../../../../Qt/6.3.0/gcc_64/mkspecs/linux-g++/qmake.conf:
 ../../../../Qt/6.3.0/gcc_64/mkspecs/features/spec_post.prf:
+.qmake.stash:
 ../../../../Qt/6.3.0/gcc_64/mkspecs/features/exclusive_builds.prf:
 ../../../../Qt/6.3.0/gcc_64/mkspecs/features/toolchain.prf:
 ../../../../Qt/6.3.0/gcc_64/mkspecs/features/default_pre.prf:
@@ -916,6 +922,7 @@ Makefile: ../ClientSide/ClientSide.pro ../../../../Qt/6.3.0/gcc_64/mkspecs/linux
 ../../../../Qt/6.3.0/gcc_64/mkspecs/features/yacc.prf:
 ../../../../Qt/6.3.0/gcc_64/mkspecs/features/lex.prf:
 ../ClientSide/ClientSide.pro:
+../ClientSide/Images.qrc:
 qmake_qmake_qm_files.qrc:
 ../../../../Qt/6.3.0/gcc_64/lib/libQt6Widgets.prl:
 ../../../../Qt/6.3.0/gcc_64/lib/libQt6Gui.prl:
@@ -935,7 +942,7 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../ClientSide/ClientSide_en_US.ts $(DISTDIR)/
-	$(COPY_FILE) --parents qmake_qmake_qm_files.qrc $(DISTDIR)/
+	$(COPY_FILE) --parents ../ClientSide/Images.qrc qmake_qmake_qm_files.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents ../../../../Qt/6.3.0/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../ClientSide/chat.h ../ClientSide/mainwindow.h ../ClientSide/recoverdata.h ../ClientSide/recoveryconfirmation.h ../ClientSide/register.h $(DISTDIR)/
 	$(COPY_FILE) --parents ../ClientSide/chat.cpp ../ClientSide/main.cpp ../ClientSide/mainwindow.cpp ../ClientSide/recoverdata.cpp ../ClientSide/recoveryconfirmation.cpp ../ClientSide/register.cpp $(DISTDIR)/
@@ -970,9 +977,14 @@ compiler_lrelease_clean:
 .qm/ClientSide_en_US.qm: ../ClientSide/ClientSide_en_US.ts
 	/home/alexander/Qt/6.3.0/gcc_64/bin/lrelease ../ClientSide/ClientSide_en_US.ts -qm .qm/ClientSide_en_US.qm
 
-compiler_rcc_make_all: qrc_qmake_qmake_qm_files.cpp
+compiler_rcc_make_all: qrc_Images.cpp qrc_qmake_qmake_qm_files.cpp
 compiler_rcc_clean:
-	-$(DEL_FILE) qrc_qmake_qmake_qm_files.cpp
+	-$(DEL_FILE) qrc_Images.cpp qrc_qmake_qmake_qm_files.cpp
+qrc_Images.cpp: ../ClientSide/Images.qrc \
+		../../../../Qt/6.3.0/gcc_64/libexec/rcc \
+		../ClientSide/Images/Clients.jpeg
+	/home/alexander/Qt/6.3.0/gcc_64/libexec/rcc -name Images ../ClientSide/Images.qrc -o qrc_Images.cpp
+
 qrc_qmake_qmake_qm_files.cpp: qmake_qmake_qm_files.qrc \
 		../../../../Qt/6.3.0/gcc_64/libexec/rcc \
 		.qm/ClientSide_en_US.qm
@@ -1851,7 +1863,35 @@ chat.o: ../ClientSide/chat.cpp ../ClientSide/chat.h \
 		../../../../Qt/6.3.0/gcc_64/include/QtGui/QTransform \
 		../../../../Qt/6.3.0/gcc_64/include/QtCore/qnativeinterface.h \
 		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qtabwidget.h \
-		ui_chat.h
+		ui_chat.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/QVariant \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QApplication \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qapplication.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qcoreapplication.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qeventloop.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qcoreapplication_platform.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qfuture.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qfutureinterface.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qmutex.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qresultstore.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qfuture_impl.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qthreadpool.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qthread.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qdeadlinetimer.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qelapsedtimer.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qrunnable.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qexception.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qpromise.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qguiapplication.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qinputmethod.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qlocale.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qguiapplication_platform.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QMenuBar \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qmenubar.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qmenu.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QStatusBar \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qstatusbar.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QWidget
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o chat.o ../ClientSide/chat.cpp
 
 main.o: ../ClientSide/main.cpp ../ClientSide/mainwindow.h \
@@ -2151,7 +2191,63 @@ mainwindow.o: ../ClientSide/mainwindow.cpp ../ClientSide/mainwindow.h \
 		../../../../Qt/6.3.0/gcc_64/include/QtGui/QTransform \
 		../../../../Qt/6.3.0/gcc_64/include/QtCore/qnativeinterface.h \
 		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qtabwidget.h \
-		ui_mainwindow.h
+		../ClientSide/recoverdata.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QDialog \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qdialog.h \
+		../ClientSide/register.h \
+		ui_mainwindow.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/QVariant \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QApplication \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qapplication.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qcoreapplication.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qeventloop.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qcoreapplication_platform.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qfuture.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qfutureinterface.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qmutex.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qresultstore.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qfuture_impl.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qthreadpool.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qthread.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qdeadlinetimer.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qelapsedtimer.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qrunnable.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qexception.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qpromise.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qguiapplication.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qinputmethod.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qlocale.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qguiapplication_platform.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QHBoxLayout \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qboxlayout.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qlayout.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qgridlayout.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QLabel \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qlabel.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qframe.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qpicture.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qtextdocument.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QLineEdit \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qlineedit.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qtextcursor.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qtextformat.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qpen.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qtextoption.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QMenuBar \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qmenubar.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qmenu.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QPushButton \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qpushbutton.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qabstractbutton.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QSpacerItem \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QStatusBar \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qstatusbar.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QVBoxLayout \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QWidget \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/QDebug \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QMessageBox \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qmessagebox.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../ClientSide/mainwindow.cpp
 
 recoverdata.o: ../ClientSide/recoverdata.cpp ../ClientSide/recoverdata.h \
@@ -2288,7 +2384,57 @@ recoverdata.o: ../ClientSide/recoverdata.cpp ../ClientSide/recoverdata.h \
 		../../../../Qt/6.3.0/gcc_64/include/QtCore/QSizeF \
 		../../../../Qt/6.3.0/gcc_64/include/QtGui/QTransform \
 		../../../../Qt/6.3.0/gcc_64/include/QtCore/qnativeinterface.h \
-		ui_recoverdata.h
+		ui_recoverdata.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/QVariant \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QApplication \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qapplication.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qcoreapplication.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qeventloop.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qcoreapplication_platform.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qfuture.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qfutureinterface.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qmutex.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qresultstore.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qfuture_impl.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qthreadpool.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qthread.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qdeadlinetimer.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qelapsedtimer.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qrunnable.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qexception.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qpromise.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qguiapplication.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qinputmethod.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qlocale.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qguiapplication_platform.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QHBoxLayout \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qboxlayout.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qlayout.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qgridlayout.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QLabel \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qlabel.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qframe.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qpicture.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qtextdocument.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QLineEdit \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qlineedit.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qtextcursor.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qtextformat.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qpen.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qtextoption.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QPushButton \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qpushbutton.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qabstractbutton.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QSpacerItem \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QTextEdit \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qtextedit.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qabstractscrollarea.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QVBoxLayout \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QWidget \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QMessageBox \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qmessagebox.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/QDebug
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o recoverdata.o ../ClientSide/recoverdata.cpp
 
 recoveryconfirmation.o: ../ClientSide/recoveryconfirmation.cpp ../ClientSide/recoveryconfirmation.h \
@@ -2425,7 +2571,65 @@ recoveryconfirmation.o: ../ClientSide/recoveryconfirmation.cpp ../ClientSide/rec
 		../../../../Qt/6.3.0/gcc_64/include/QtCore/QSizeF \
 		../../../../Qt/6.3.0/gcc_64/include/QtGui/QTransform \
 		../../../../Qt/6.3.0/gcc_64/include/QtCore/qnativeinterface.h \
-		ui_recoveryconfirmation.h
+		ui_recoveryconfirmation.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/QVariant \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QApplication \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qapplication.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qcoreapplication.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qeventloop.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qcoreapplication_platform.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qfuture.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qfutureinterface.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qmutex.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qresultstore.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qfuture_impl.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qthreadpool.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qthread.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qdeadlinetimer.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qelapsedtimer.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qrunnable.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qexception.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qpromise.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qguiapplication.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qinputmethod.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qlocale.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qguiapplication_platform.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QHBoxLayout \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qboxlayout.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qlayout.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qgridlayout.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QLabel \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qlabel.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qframe.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qpicture.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qtextdocument.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QLineEdit \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qlineedit.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qtextcursor.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qtextformat.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qpen.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qtextoption.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QPushButton \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qpushbutton.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qabstractbutton.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QSpacerItem \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QTextEdit \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qtextedit.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qabstractscrollarea.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QVBoxLayout \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QWidget \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QFileDialog \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qfiledialog.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qdir.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qfile.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qfiledevice.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qfileinfo.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qdatetime.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qcalendar.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/QFile \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QMessageBox \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qmessagebox.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o recoveryconfirmation.o ../ClientSide/recoveryconfirmation.cpp
 
 register.o: ../ClientSide/register.cpp ../ClientSide/register.h \
@@ -2562,8 +2766,57 @@ register.o: ../ClientSide/register.cpp ../ClientSide/register.h \
 		../../../../Qt/6.3.0/gcc_64/include/QtCore/QSizeF \
 		../../../../Qt/6.3.0/gcc_64/include/QtGui/QTransform \
 		../../../../Qt/6.3.0/gcc_64/include/QtCore/qnativeinterface.h \
-		ui_register.h
+		../ClientSide/recoveryconfirmation.h \
+		ui_register.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/QVariant \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QApplication \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qapplication.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qcoreapplication.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qeventloop.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qcoreapplication_platform.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qfuture.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qfutureinterface.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qmutex.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qresultstore.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qfuture_impl.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qthreadpool.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qthread.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qdeadlinetimer.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qelapsedtimer.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qrunnable.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qexception.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qpromise.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qguiapplication.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qinputmethod.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtCore/qlocale.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qguiapplication_platform.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QHBoxLayout \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qboxlayout.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qlayout.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qgridlayout.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QLabel \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qlabel.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qframe.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qpicture.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qtextdocument.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QLineEdit \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qlineedit.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qtextcursor.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qtextformat.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qpen.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qtextoption.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QPushButton \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qpushbutton.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qabstractbutton.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QVBoxLayout \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QWidget \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QMessageBox \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qmessagebox.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o register.o ../ClientSide/register.cpp
+
+qrc_Images.o: qrc_Images.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_Images.o qrc_Images.cpp
 
 qrc_qmake_qmake_qm_files.o: qrc_qmake_qmake_qm_files.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_qmake_qmake_qm_files.o qrc_qmake_qmake_qm_files.cpp

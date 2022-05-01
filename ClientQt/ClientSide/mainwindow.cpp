@@ -1,4 +1,6 @@
 #include "mainwindow.h"
+#include "chat.h"
+#include "qscreen.h"
 #include "recoverdata.h"
 #include "register.h"
 #include "ui_mainwindow.h"
@@ -23,6 +25,14 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowTitle(tr("Logging menu"));
     ui->LoginWrite->setMaxLength(16);
     ui->PasswordWrite->setMaxLength(100);
+
+    //placing loggin menu in the center of screen
+    QScreen *screen = QGuiApplication::primaryScreen();
+    QRect  screenGeometry = screen->geometry();
+    int x = (screenGeometry.width()-width()) / 2;
+    int y = (screenGeometry.height()-height()) / 2;
+    move(x, y);
+
 }
 
 MainWindow::~MainWindow(){
@@ -56,13 +66,12 @@ void MainWindow::on_Register_clicked(){
 
 
 void MainWindow::on_Login_clicked(){
-    QString Login = ui->LoginWrite->text();
     //Error handling
-    if(Login.isEmpty() == true){
+    if(ui->LoginWrite->text().isEmpty() == true){
         QMessageBox::critical(this,QObject::tr("Error"), QObject::tr("Nickname can't be empty"));
         ui->LoginWrite->setStyleSheet("color: #F08080");
         return;
-    } else if (Login.contains(' ') == true){
+    } else if (ui->LoginWrite->text().contains(' ') == true){
         QMessageBox::critical(this,QObject::tr("Error"), QObject::tr("Nickname can't contain spaces"));
         ui->LoginWrite->setStyleSheet("color: #F08080");
         return;
@@ -79,7 +88,9 @@ void MainWindow::on_Login_clicked(){
         ui->PasswordWrite->setStyleSheet("color: #F08080");
         return;
     }
-    qDebug() << Login;
+    Chat *window = new Chat;
+    window->show();
+    close();
 }
 
 

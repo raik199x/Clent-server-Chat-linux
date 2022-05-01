@@ -15,6 +15,9 @@ public:
     explicit Chat(QWidget *parent = nullptr);
     ~Chat();
 
+private slots:
+    void on_LogOut_clicked();
+
 private:
     Ui::Chat *ui;
 };
