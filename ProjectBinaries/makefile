@@ -7,7 +7,6 @@ all:
 	../server/Slots.c \
 	-o server -pthread
 	gcc ../MakeTestRequest/TestRequest.c -o MakeRequest
-	g++ ../client/client.cpp -o tempclient
 debug:
 	gcc ../server/server.c \
 	../server/functions.c \
@@ -17,6 +16,5 @@ debug:
 	../server/Slots.c \
 	-o server -pthread -g
 	gcc ../MakeTestRequest/TestRequest.c -o MakeRequest -g
-	g++ ../client/client.cpp -o tempclient -g
 clear:
-	rm -rf server MakeRequest tempclient
+	rm -rf server MakeRequest database
