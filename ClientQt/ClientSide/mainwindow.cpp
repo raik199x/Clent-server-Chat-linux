@@ -96,7 +96,8 @@ void MainWindow::on_Login_clicked(){
     int *ConnectionDescriptor = new int; (*ConnectionDescriptor) = -1;
     if(((*ConnectionDescriptor) = socket(AF_INET, SOCK_STREAM, 0)) < 0){
         QMessageBox::critical(this,QObject::tr("Error"), QObject::tr("Client error: cant create socket"));
-        close();
+        delete ConnectionDescriptor;
+        return;
     }
     struct sockaddr_in server_adress;
     server_adress.sin_family = AF_INET;
@@ -105,12 +106,14 @@ void MainWindow::on_Login_clicked(){
     //Convert IPv4 and IPv6 addresses from text to binary
     if (inet_pton(AF_INET, "127.0.0.1", &server_adress.sin_addr) <= 0){
          QMessageBox::critical(this,QObject::tr("Error"), QObject::tr("Client error: Invalid address/ Address not supported"));
-         close();
+         delete ConnectionDescriptor;
+         return;
     }
 
     if (::connect((*ConnectionDescriptor), (struct sockaddr*)&server_adress, sizeof(server_adress)) < 0) {
         QMessageBox::critical(this,QObject::tr("Error"), QObject::tr("Server error: Client couldnt connect to server"));
-        close();
+        delete ConnectionDescriptor;
+        return;
     }
     //preparing message
     char *send_to_server = new char[190];

@@ -47,7 +47,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="PasswordWrite"/>
+       <widget class="QLineEdit" name="PasswordWrite">
+        <property name="echoMode">
+         <enum>QLineEdit::Password</enum>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
@@ -61,7 +65,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="RepPaswwordWrite"/>
+       <widget class="QLineEdit" name="RepPaswwordWrite">
+        <property name="echoMode">
+         <enum>QLineEdit::Password</enum>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>

@@ -33,12 +33,24 @@ void *WorkingWithClient(void *arg){
 
     while(buffer[0] != '#'){
         free(buffer);
-        buffer = (char*)malloc(255);
-        recvfrom(clientSlots->ConnectionDescriptor, buffer, 255, 0,(struct sockaddr*)&address, (socklen_t*)&addrlen);
-        if(buffer[0] == '\0')
+        buffer = (char*)malloc(106);
+        recvfrom(clientSlots->ConnectionDescriptor, buffer, 106, 0,(struct sockaddr*)&address, (socklen_t*)&addrlen);
+        //sending this message to all clients
+        if(buffer[0] == 'M' && buffer[1] == 'E' && buffer[2] == 'S'){
+            //first of all, running to the start of users
+            struct Slots *runner = clientSlots;
+            while(runner->left != NULL)
+                runner = runner->left;
+            //now sending messages
+            while(runner != NULL){
+                if(runner->ConnectionDescriptor != -1)
+                    send(runner->ConnectionDescriptor,buffer,106,0);
+                runner = runner->right;
+            }
+        } else if(buffer[0] == '\0')
             continue;
-        printf("message: %s\n",buffer);
     }
+    buffer[0] = '#'; send(clientSlots->ConnectionDescriptor,buffer,1,0);
     free(buffer);
     printf("LOG: Client %s exited\n",clientSlots->Nickname);
     close(clientSlots->ConnectionDescriptor);
@@ -82,10 +94,23 @@ void WelcomeMessage(){
     return;
 }
 
+struct Slots *slots = NULL;
+
 void SigIntHandler(){
     printf("\nDisconnecting all clients\n");
-    //add disconnecting
-    printf("Shutdowning server\n");
+
+    struct Slots *runner = slots;
+    while(runner != NULL){
+        if(runner->ConnectionDescriptor != -1){
+            char buffer = '#';
+            send(runner->ConnectionDescriptor,&buffer,2,0);
+            close(runner->ConnectionDescriptor);
+            printf("%s - forcefully disconnected\n",runner->Nickname);
+        }
+        runner = runner->right;
+    }
+
+    printf("Server closed\n");
     exit(0);
 }
 
@@ -117,7 +142,7 @@ int main(int argc, char const* argv[]){
     //++++++++++++++++++++++++++++++++++++++++++++++++++++DATA SEG
     int server_fd, valread;
     int opt = 1;
-    struct Slots *slots = NULL;
+    slots = NULL;
     //----------------------------------------------------DATA SEG
     printf("LOG: creating socket\n");
     // Creating socket file descriptor
@@ -219,7 +244,7 @@ int main(int argc, char const* argv[]){
             }
             buffer[0] = 'G'; buffer[1] = 'O'; buffer[2] = '!'; buffer[3] = '\0';
             send(WaitClient,buffer,4,0);
-            printf("LOG: Client %s arrived\n",runner->Nickname);
+            printf("LOG: Client arrived\n");
             pthread_create(&runner->ClientThread,NULL,&WorkingWithClient,&runner);
         } else { 
             SetOutputColor("YELLOW");
