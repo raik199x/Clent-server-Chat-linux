@@ -18,5 +18,6 @@ int DecideAccess(char *data){
                 fscanf(file,"%c",&LetterFromFile);
             continue;
         }
+        runner++;
     }
 }

@@ -30,11 +30,11 @@ struct qt_meta_stringdata_Chat_t {
 static const qt_meta_stringdata_Chat_t qt_meta_stringdata_Chat = {
     {
 QT_MOC_LITERAL(0, 4), // "Chat"
-QT_MOC_LITERAL(5, 17), // "on_LogOut_clicked"
+QT_MOC_LITERAL(5, 17), // "on_logout_clicked"
 QT_MOC_LITERAL(23, 0) // ""
 
     },
-    "Chat\0on_LogOut_clicked\0"
+    "Chat\0on_logout_clicked\0"
 };
 #undef QT_MOC_LITERAL
 
@@ -66,7 +66,7 @@ void Chat::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void *
         auto *_t = static_cast<Chat *>(_o);
         (void)_t;
         switch (_id) {
-        case 0: _t->on_LogOut_clicked(); break;
+        case 0: _t->on_logout_clicked(); break;
         default: ;
         }
     }
@@ -74,7 +74,7 @@ void Chat::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void *
 }
 
 const QMetaObject Chat::staticMetaObject = { {
-    QMetaObject::SuperData::link<QMainWindow::staticMetaObject>(),
+    QMetaObject::SuperData::link<QDialog::staticMetaObject>(),
     qt_meta_stringdata_Chat.offsetsAndSize,
     qt_meta_data_Chat,
     qt_static_metacall,
@@ -99,12 +99,12 @@ void *Chat::qt_metacast(const char *_clname)
     if (!_clname) return nullptr;
     if (!strcmp(_clname, qt_meta_stringdata_Chat.stringdata0))
         return static_cast<void*>(this);
-    return QMainWindow::qt_metacast(_clname);
+    return QDialog::qt_metacast(_clname);
 }
 
 int Chat::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
-    _id = QMainWindow::qt_metacall(_c, _id, _a);
+    _id = QDialog::qt_metacall(_c, _id, _a);
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {

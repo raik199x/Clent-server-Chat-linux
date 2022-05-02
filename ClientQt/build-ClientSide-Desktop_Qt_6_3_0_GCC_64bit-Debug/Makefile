@@ -1000,8 +1000,8 @@ compiler_moc_header_make_all: moc_chat.cpp moc_mainwindow.cpp moc_recoverdata.cp
 compiler_moc_header_clean:
 	-$(DEL_FILE) moc_chat.cpp moc_mainwindow.cpp moc_recoverdata.cpp moc_recoveryconfirmation.cpp moc_register.cpp
 moc_chat.cpp: ../ClientSide/chat.h \
-		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QMainWindow \
-		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qmainwindow.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QDialog \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qdialog.h \
 		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qtwidgetsglobal.h \
 		../../../../Qt/6.3.0/gcc_64/include/QtGui/qtguiglobal.h \
 		../../../../Qt/6.3.0/gcc_64/include/QtCore/qglobal.h \
@@ -1133,7 +1133,6 @@ moc_chat.cpp: ../ClientSide/chat.h \
 		../../../../Qt/6.3.0/gcc_64/include/QtCore/QSizeF \
 		../../../../Qt/6.3.0/gcc_64/include/QtGui/QTransform \
 		../../../../Qt/6.3.0/gcc_64/include/QtCore/qnativeinterface.h \
-		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qtabwidget.h \
 		moc_predefs.h \
 		../../../../Qt/6.3.0/gcc_64/libexec/moc
 	/home/alexander/Qt/6.3.0/gcc_64/libexec/moc $(DEFINES) --include /home/alexander/Desktop/Client-server-Chat-linux/ClientQt/build-ClientSide-Desktop_Qt_6_3_0_GCC_64bit-Debug/moc_predefs.h -I/home/alexander/Qt/6.3.0/gcc_64/mkspecs/linux-g++ -I/home/alexander/Desktop/Client-server-Chat-linux/ClientQt/ClientSide -I/home/alexander/Qt/6.3.0/gcc_64/include -I/home/alexander/Qt/6.3.0/gcc_64/include/QtWidgets -I/home/alexander/Qt/6.3.0/gcc_64/include/QtGui -I/home/alexander/Qt/6.3.0/gcc_64/include/QtCore -I. -I/usr/include/c++/10 -I/usr/include/x86_64-linux-gnu/c++/10 -I/usr/include/c++/10/backward -I/usr/lib/gcc/x86_64-linux-gnu/10/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../ClientSide/chat.h -o moc_chat.cpp
@@ -1729,8 +1728,8 @@ compiler_clean: compiler_lrelease_clean compiler_rcc_clean compiler_moc_predefs_
 ####### Compile
 
 chat.o: ../ClientSide/chat.cpp ../ClientSide/chat.h \
-		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QMainWindow \
-		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qmainwindow.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QDialog \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qdialog.h \
 		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qtwidgetsglobal.h \
 		../../../../Qt/6.3.0/gcc_64/include/QtGui/qtguiglobal.h \
 		../../../../Qt/6.3.0/gcc_64/include/QtCore/qglobal.h \
@@ -1862,7 +1861,6 @@ chat.o: ../ClientSide/chat.cpp ../ClientSide/chat.h \
 		../../../../Qt/6.3.0/gcc_64/include/QtCore/QSizeF \
 		../../../../Qt/6.3.0/gcc_64/include/QtGui/QTransform \
 		../../../../Qt/6.3.0/gcc_64/include/QtCore/qnativeinterface.h \
-		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qtabwidget.h \
 		ui_chat.h \
 		../../../../Qt/6.3.0/gcc_64/include/QtCore/QVariant \
 		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QApplication \
@@ -1886,9 +1884,40 @@ chat.o: ../ClientSide/chat.cpp ../ClientSide/chat.h \
 		../../../../Qt/6.3.0/gcc_64/include/QtGui/qinputmethod.h \
 		../../../../Qt/6.3.0/gcc_64/include/QtCore/qlocale.h \
 		../../../../Qt/6.3.0/gcc_64/include/QtGui/qguiapplication_platform.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QHBoxLayout \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qboxlayout.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qlayout.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qgridlayout.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QLabel \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qlabel.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qframe.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qpicture.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qtextdocument.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QMainWindow \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qmainwindow.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qtabwidget.h \
 		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QMenuBar \
 		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qmenubar.h \
 		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qmenu.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QPlainTextEdit \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qplaintextedit.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qtextedit.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qabstractscrollarea.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qtextoption.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qtextcursor.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qtextformat.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qpen.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qabstracttextdocumentlayout.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qtextlayout.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qglyphrun.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qrawfont.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtGui/qfontdatabase.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QPushButton \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qpushbutton.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qabstractbutton.h \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QScrollArea \
+		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qscrollarea.h \
 		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QStatusBar \
 		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qstatusbar.h \
 		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QWidget
@@ -2051,7 +2080,6 @@ main.o: ../ClientSide/main.cpp ../ClientSide/mainwindow.h \
 		../../../../Qt/6.3.0/gcc_64/include/QtCore/qlocale.h \
 		../../../../Qt/6.3.0/gcc_64/include/QtGui/qguiapplication_platform.h \
 		../../../../Qt/6.3.0/gcc_64/include/QtCore/QLocale \
-		../../../../Qt/6.3.0/gcc_64/include/QtGui/QScreen \
 		../../../../Qt/6.3.0/gcc_64/include/QtCore/QTranslator \
 		../../../../Qt/6.3.0/gcc_64/include/QtCore/qtranslator.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../ClientSide/main.cpp
@@ -2191,9 +2219,10 @@ mainwindow.o: ../ClientSide/mainwindow.cpp ../ClientSide/mainwindow.h \
 		../../../../Qt/6.3.0/gcc_64/include/QtGui/QTransform \
 		../../../../Qt/6.3.0/gcc_64/include/QtCore/qnativeinterface.h \
 		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qtabwidget.h \
-		../ClientSide/recoverdata.h \
+		../ClientSide/chat.h \
 		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/QDialog \
 		../../../../Qt/6.3.0/gcc_64/include/QtWidgets/qdialog.h \
+		../ClientSide/recoverdata.h \
 		../ClientSide/register.h \
 		ui_mainwindow.h \
 		../../../../Qt/6.3.0/gcc_64/include/QtCore/QVariant \

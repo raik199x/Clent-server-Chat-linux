@@ -27,11 +27,10 @@ struct sockaddr_in address;
 int addrlen = sizeof(address);
 
 void *WorkingWithClient(void *arg){
-    struct Slots *clientSlots = arg;
-
+    struct Slots *clientSlots = (*(void **)arg);
+    printf("Info about new connection: %d - connection descriptor  %s - Nickname\n",clientSlots->ConnectionDescriptor, clientSlots->Nickname);
     char *buffer = (char*)malloc(sizeof(char)); buffer[0] = '1';
 
-    printf("Client was here\n");
     while(buffer[0] != '#'){
         free(buffer);
         buffer = (char*)malloc(255);
@@ -118,7 +117,6 @@ int main(int argc, char const* argv[]){
     //++++++++++++++++++++++++++++++++++++++++++++++++++++DATA SEG
     int server_fd, valread;
     int opt = 1;
-    //pthread_t *ClientsOnServer = (pthread_t*)malloc(2*sizeof(pthread_t));
     struct Slots *slots = NULL;
     //----------------------------------------------------DATA SEG
     printf("LOG: creating socket\n");
@@ -190,13 +188,11 @@ int main(int argc, char const* argv[]){
             response = RegisterClient(buffer);
             send(WaitClient,response,202,0);
             free(response);
-            continue;
         } else if(buffer[0] == 'R' && buffer[1] == 'E' && buffer[2] == 'C'){
             char *response;
             response = RecoverClient(buffer);
             send(WaitClient,response,300,0);
             free(response);
-            continue;
         } else if (buffer[0] == 'C' && buffer[1] == 'O' && buffer[2] == 'N'){
             if(DecideAccess(buffer) == 0){
                 SetOutputColor("YELLOW");
@@ -205,6 +201,7 @@ int main(int argc, char const* argv[]){
                 buffer[0] = 'B'; buffer[1] = 'A'; buffer[2] = 'D'; buffer[3] = '\0';
                 send(WaitClient,buffer,4,0);
                 free(buffer);
+                close(WaitClient);
                 continue;
             }
 
@@ -214,12 +211,14 @@ int main(int argc, char const* argv[]){
                     AppendSlots(&runner);
                 runner = runner->right;
             }
-            dup2(WaitClient,runner->ConnectionDescriptor); //copy file descriptor
+            runner->ConnectionDescriptor = dup(WaitClient); //copy file descriptor
             //copy nickname
             for(int i = 3; buffer[i] != ':';i++){
                 runner->Nickname[i-3] = buffer[i];
                 runner->Nickname[i-2] = '\0';
-            } 
+            }
+            buffer[0] = 'G'; buffer[1] = 'O'; buffer[2] = '!'; buffer[3] = '\0';
+            send(WaitClient,buffer,4,0);
             printf("LOG: Client %s arrived\n",runner->Nickname);
             pthread_create(&runner->ClientThread,NULL,&WorkingWithClient,&runner);
         } else { 
@@ -228,9 +227,8 @@ int main(int argc, char const* argv[]){
             SetOutputColor("def");
             buffer[0] = 'B'; buffer[1] = 'A'; buffer[2] = 'D'; buffer[3] = '\0';
             send(WaitClient,buffer,4,0);
-            close(WaitClient);
-            continue;
         }
+        close(WaitClient);
         free(buffer);
     }
 

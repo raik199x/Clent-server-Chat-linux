@@ -7,6 +7,9 @@
 #include <QDebug>
 #include <QMessageBox>
 
+#include <arpa/inet.h>
+#include <sys/socket.h>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -88,9 +91,63 @@ void MainWindow::on_Login_clicked(){
         ui->PasswordWrite->setStyleSheet("color: #F08080");
         return;
     }
-    Chat *window = new Chat;
-    window->show();
-    close();
+
+    //asking server for registration
+    int *ConnectionDescriptor = new int; (*ConnectionDescriptor) = -1;
+    if(((*ConnectionDescriptor) = socket(AF_INET, SOCK_STREAM, 0)) < 0){
+        QMessageBox::critical(this,QObject::tr("Error"), QObject::tr("Client error: cant create socket"));
+        close();
+    }
+    struct sockaddr_in server_adress;
+    server_adress.sin_family = AF_INET;
+    server_adress.sin_port = htons(3002);
+
+    //Convert IPv4 and IPv6 addresses from text to binary
+    if (inet_pton(AF_INET, "127.0.0.1", &server_adress.sin_addr) <= 0){
+         QMessageBox::critical(this,QObject::tr("Error"), QObject::tr("Client error: Invalid address/ Address not supported"));
+         close();
+    }
+
+    if (::connect((*ConnectionDescriptor), (struct sockaddr*)&server_adress, sizeof(server_adress)) < 0) {
+        QMessageBox::critical(this,QObject::tr("Error"), QObject::tr("Server error: Client couldnt connect to server"));
+        close();
+    }
+    //preparing message
+    char *send_to_server = new char[190];
+    send_to_server[0] = 'C';
+    send_to_server[1] = 'O';
+    send_to_server[2] = 'N';
+    int i = 3;
+
+    QString Nickname = ui->LoginWrite->text(), Password = ui->PasswordWrite->text();
+    for(; i-3 < Nickname.length(); i++)
+        send_to_server[i] = Nickname[i-3].toLatin1();
+    send_to_server[i++] = ':';
+    for(int j = 0; j < Password.length();j++)
+        send_to_server[i++] = Password[j].toLatin1();
+    send_to_server[i] = '\0';
+    send((*ConnectionDescriptor),send_to_server,190,0);
+    delete []send_to_server;
+    send_to_server = new char[202];
+    recv((*ConnectionDescriptor),send_to_server,202,0);
+
+    QString temp;
+    for(i = 0; send_to_server[i] != '\0';i++)
+        temp.append(send_to_server[i]);
+    delete[] send_to_server;
+    if(temp == "BAD"){
+        QMessageBox::critical(this,QObject::tr("Error"), QObject::tr("Wrong login or password"));
+        delete ConnectionDescriptor;
+        return;
+    }
+
+    //if connection accepted - opening chat
+    hide();
+    Chat *window = new Chat(nullptr,Nickname,ConnectionDescriptor);
+    window->setModal(true);
+    window->exec();
+    show();
+    delete window;
 }
 
 
