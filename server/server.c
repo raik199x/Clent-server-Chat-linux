@@ -8,6 +8,7 @@
 #include <signal.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <time.h>
 
 #include <netinet/in.h>
 #include <sys/socket.h>
@@ -29,30 +30,86 @@ int addrlen = sizeof(address);
 void *WorkingWithClient(void *arg){
     struct Slots *clientSlots = (*(void **)arg);
     printf("Info about new connection: %d - connection descriptor  %s - Nickname\n",clientSlots->ConnectionDescriptor, clientSlots->Nickname);
-    char *buffer = (char*)malloc(sizeof(char)); buffer[0] = '1';
-
+    char *buffer = (char*)malloc(20);
+    //Sending everyone that new user joined chat
+    buffer[0] = 'A'; buffer[1] = 'D'; buffer[2] = 'D';
+    for(int i = 3; clientSlots->Nickname[i-3] != '\0';i++){
+        buffer[i] = clientSlots->Nickname[i-3];
+        buffer[i+1] = '\0';
+    }
+    struct Slots *runner = clientSlots;
+    //going to the first client
+    while(runner->left != NULL)
+        runner = runner->left;
+    //sending all client info about new client;
+    while(runner != NULL){
+        if(runner->ConnectionDescriptor != -1){
+            send(runner->ConnectionDescriptor,buffer,20,0);
+            //also sending info about active clients for new user
+            if(runner != clientSlots){
+                char *tempBuff = (char*)malloc(20); tempBuff[0] = 'A'; tempBuff[1] = 'D'; tempBuff[2] = 'D';
+                for(int i = 3; runner->Nickname[i-3]!='\0';i++){
+                   tempBuff[i] = runner->Nickname[i-3];
+                   tempBuff[i+1] = '\0';
+                }
+                sleep(1);
+                send(clientSlots->ConnectionDescriptor,tempBuff,20,0);
+                free(tempBuff);
+            }
+        }
+        runner = runner->right;
+    }
+    //message handler
     while(buffer[0] != '#'){
         free(buffer);
-        buffer = (char*)malloc(106);
-        recvfrom(clientSlots->ConnectionDescriptor, buffer, 106, 0,(struct sockaddr*)&address, (socklen_t*)&addrlen);
+        buffer = (char*)malloc(150);
+        recvfrom(clientSlots->ConnectionDescriptor, buffer, 150, 0,(struct sockaddr*)&address, (socklen_t*)&addrlen);
         //sending this message to all clients
         if(buffer[0] == 'M' && buffer[1] == 'E' && buffer[2] == 'S'){
+            //beautify message
+            char *beautified = (char*)malloc(150); int foundTwoPoints = 0;
+            for(int i = 0,j = 0; buffer[i] != '\0';i++,j++){
+                if(foundTwoPoints == 0 && buffer[i] == ':'){
+                    beautified[j] = buffer[i];
+                    j++;
+                    beautified[j] = '\n';
+                    foundTwoPoints = 1;
+                    continue;
+                }
+                beautified[j] = buffer[i];
+            }
             //first of all, running to the start of users
-            struct Slots *runner = clientSlots;
+            runner = clientSlots;
             while(runner->left != NULL)
                 runner = runner->left;
             //now sending messages
             while(runner != NULL){
                 if(runner->ConnectionDescriptor != -1)
-                    send(runner->ConnectionDescriptor,buffer,106,0);
+                    send(runner->ConnectionDescriptor,beautified,150,0);
                 runner = runner->right;
             }
+            free(beautified);
         } else if(buffer[0] == '\0')
             continue;
     }
+    //Sending everyone that user leaving chat
+    runner = clientSlots;
+    free(buffer); buffer = (char*)malloc(20); buffer[0] = 'D'; buffer[1] = 'I'; buffer[2] = 'S';
+    for(int i = 3; clientSlots->Nickname[i-3] != '\0';i++){
+        buffer[i] = clientSlots->Nickname[i-3];
+        buffer[i+1] = '\0';
+    }
+    while(runner->left != NULL)
+        runner = runner->left;
+    while(runner != NULL){
+        if(runner->ConnectionDescriptor != -1 && runner != clientSlots)
+            send(runner->ConnectionDescriptor,buffer,20,0);
+        runner = runner->right;
+    }
+    //disconnecting
     buffer[0] = '#'; send(clientSlots->ConnectionDescriptor,buffer,1,0);
     free(buffer);
-    printf("LOG: Client %s exited\n",clientSlots->Nickname);
+    printf("LOG: Client %s exited normally\n",clientSlots->Nickname);
     close(clientSlots->ConnectionDescriptor);
     clientSlots->ConnectionDescriptor = -1;
     pthread_exit(NULL);
