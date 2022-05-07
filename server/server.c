@@ -52,7 +52,7 @@ void *WorkingWithClient(void *arg){
                    tempBuff[i] = runner->Nickname[i-3];
                    tempBuff[i+1] = '\0';
                 }
-                sleep(1);
+                //sleep(1);
                 send(clientSlots->ConnectionDescriptor,tempBuff,20,0);
                 free(tempBuff);
             }

@@ -25,6 +25,7 @@ private slots:
 
     void on_textMessage_textChanged();
 
+    void CleaningUsers(char *buffer);
 private:
     Ui::Chat *ui;
     int *ConnectionDescriptor;
@@ -33,6 +34,7 @@ private:
     bool IsDisconnectedFromServer;
 signals:
     void Disconnected();
+    void ClearUsersOnline(char *buffer);
 };
 
 #endif // CHAT_H

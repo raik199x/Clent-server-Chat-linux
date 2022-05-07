@@ -35,35 +35,37 @@ void Chat::RecMessage(){
                 temp.append(buffer[i]);
             ui->usersOnline->append(temp);
         } else if(buffer[0] == 'D' && buffer[1] == 'I' && buffer[2] == 'S'){ //cannot change in a different thread? wtf
-            QString oldOnline = ui->usersOnline->toPlainText(), temp;
-            qDebug() << oldOnline;
-            //ui->usersOnline->clear(); //crashes here, maybe up signal?
-            qDebug() << oldOnline;
-            //running through users
-            for(int i = 0; i < oldOnline.length();i++){
-                temp.append(oldOnline[i]);
-                //if this is end of nickname
-                if(oldOnline[i] == '\n'){
-                    qDebug() << temp;
-                    bool result = true;
-                    //we check if this is nickname that need to leave
-                    for(int j = 0; buffer[j] != '\0';j++)
-                        if(buffer[j] != temp[j]){
-                            qDebug() << buffer[j] << temp[j];
-                            result = false;
-                            break;
-                        }
-                    if(result == false)
-                        ui->usersOnline->append(temp);
-                    temp.clear();
-                }
-            }
+            emit ClearUsersOnline(buffer);
         }
     }
     qDebug() << "Thread closed";
     this->IsDisconnectedFromServer = true;
     emit Disconnected();
     return;
+}
+
+void Chat::CleaningUsers(char buffer[1000]){
+    QString oldOnline = ui->usersOnline->toPlainText(), temp;
+    ui->usersOnline->clear();
+    qDebug() << oldOnline;
+    //running through users
+    for(int i = 0; i < oldOnline.length();i++){
+        //if this is end of nickname
+        if(oldOnline[i] == '\n'){
+            qDebug() << temp;
+            bool result = true;
+            //we check if this is nickname that need to be deleted
+            for(int j = 3; buffer[j] != '\0';j++)
+                if(buffer[j] != temp[j-3]){
+                    result = false;
+                    break;
+                }
+            if(result == false)
+                ui->usersOnline->append(temp);
+            temp.clear();
+        }
+        temp.append(oldOnline[i]);
+    }
 }
 
 Chat::Chat(QWidget *parent,QString Nickname, int *ConnectionDescriptor) :
@@ -88,6 +90,7 @@ Chat::Chat(QWidget *parent,QString Nickname, int *ConnectionDescriptor) :
     this->IsDisconnectedFromServer = false;
 
     connect(this,&Chat::Disconnected,this,&Chat::on_logout_clicked);
+    connect(this,&Chat::ClearUsersOnline,this,&Chat::CleaningUsers);
 }
 
 
