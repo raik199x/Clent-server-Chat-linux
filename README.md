@@ -8,6 +8,16 @@ It works only on localhost and uses 3002 port for connections.
 
 ---
 
+Installation:
+
+in folder Installation you'll find binary for server, is doesn't need to be installed, just run it.
+
+File ".run" should be runned as executable file, the program will exctract files for clien app, you'll find "*.sh" file that will run program
+
+Also if you need you can check cheksum.
+
+---
+
 Server has 3 levels of logging:
 
     LOG - simple message that something happened on server
@@ -35,10 +45,12 @@ but still, code contains all needs for translation to other languages
 ---
 
 Features:
+
     * You can chat (:D)
     * No limit for active connections
 
 How can be improved?
+
     * File transfer
     * Multiple languages
     * Encryption
