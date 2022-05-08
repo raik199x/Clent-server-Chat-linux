@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include <QDebug>
 #include <QScrollBar>
+#include <QCloseEvent>
 
 Chat::Chat(QWidget *parent) :
     QDialog(parent),
@@ -16,10 +17,20 @@ Chat::Chat(QWidget *parent) :
 }
 
 void Chat::RecMessage(){
-    char buffer[1000] = {'1'};
+    char buffer[500] = {'1'};
+    //first we make Online users
     while(1){
-        recv((*ConnectionDescriptor),buffer,1000,0);
-        //qDebug() << buffer;
+        recv((*ConnectionDescriptor),buffer,20,0);
+        if(buffer[0] == 'D')
+            break;
+        QString temp;
+        for(int i = 3; buffer[i] != '\0';i++)
+            temp.append(buffer[i]);
+        ui->usersOnline->append(temp);
+    }
+
+    while(1){
+        recv((*ConnectionDescriptor),buffer,400,0);
         if(buffer[0] == '#')
             break;
         else if(buffer[0] == 'M' && buffer[1] == 'E' && buffer[2] == 'S'){
@@ -34,25 +45,34 @@ void Chat::RecMessage(){
             for(int i = 3; buffer[i] != '\0';i++)
                 temp.append(buffer[i]);
             ui->usersOnline->append(temp);
-        } else if(buffer[0] == 'D' && buffer[1] == 'I' && buffer[2] == 'S'){ //cannot change in a different thread? wtf
+        } else if(buffer[0] == 'D' && buffer[1] == 'I' && buffer[2] == 'S'){
             emit ClearUsersOnline(buffer);
         }
     }
+
     qDebug() << "Thread closed";
     this->IsDisconnectedFromServer = true;
     emit Disconnected();
     return;
 }
 
-void Chat::CleaningUsers(char buffer[1000]){
+void Chat::CleaningUsers(char buffer[500]){
     QString oldOnline = ui->usersOnline->toPlainText(), temp;
     ui->usersOnline->clear();
-    qDebug() << oldOnline;
+    oldOnline.append('\n');
+    //preparation, checking length of buffer
+    int size = 0;
+    while(buffer[size+3] != '\0')
+        size++;
     //running through users
     for(int i = 0; i < oldOnline.length();i++){
         //if this is end of nickname
         if(oldOnline[i] == '\n'){
-            qDebug() << temp;
+            if(size != temp.length()){
+                ui->usersOnline->append(temp);
+                temp.clear();
+                continue;
+            }
             bool result = true;
             //we check if this is nickname that need to be deleted
             for(int j = 3; buffer[j] != '\0';j++)
@@ -63,6 +83,7 @@ void Chat::CleaningUsers(char buffer[1000]){
             if(result == false)
                 ui->usersOnline->append(temp);
             temp.clear();
+            continue;
         }
         temp.append(oldOnline[i]);
     }
@@ -75,6 +96,11 @@ Chat::Chat(QWidget *parent,QString Nickname, int *ConnectionDescriptor) :
     ui->setupUi(this);
     this->setStyleSheet("color: #00FFFF; background-color: #2F4F4F");
 
+    this->Nickname = Nickname;
+    this->ConnectionDescriptor = ConnectionDescriptor;
+    this->ListenThread = new std::thread(&Chat::RecMessage, this);
+    this->IsDisconnectedFromServer = false;
+
     QScreen *screen = QGuiApplication::primaryScreen();
     QRect  screenGeometry = screen->geometry();
     int x = (screenGeometry.width()-width()) / 2;
@@ -83,11 +109,6 @@ Chat::Chat(QWidget *parent,QString Nickname, int *ConnectionDescriptor) :
 
     ui->SymbolsInLine->setText("0/100");
     ui->userNickname->setText(Nickname);
-
-    this->Nickname = Nickname;
-    this->ConnectionDescriptor = ConnectionDescriptor;
-    this->ListenThread = new std::thread(&Chat::RecMessage, this);
-    this->IsDisconnectedFromServer = false;
 
     connect(this,&Chat::Disconnected,this,&Chat::on_logout_clicked);
     connect(this,&Chat::ClearUsersOnline,this,&Chat::CleaningUsers);
@@ -102,15 +123,10 @@ Chat::~Chat()
 void Chat::on_logout_clicked(){
     if(this->IsDisconnectedFromServer == true){
         QMessageBox::warning(this,QObject::tr("Disconnected"), QObject::tr("You were disconnected from server"));
-        ::close((*ConnectionDescriptor));
-        delete ConnectionDescriptor;
+        //::close((*ConnectionDescriptor));
+        //delete ConnectionDescriptor;
         qDebug() << "Forcefully disconnected";
-        close();
     }
-    char buffer[2] = {'#','\0'};
-    send((*ConnectionDescriptor),buffer,3,0);
-    this->ListenThread->join();
-    ::close((*ConnectionDescriptor));
     close();
 }
 
@@ -133,6 +149,16 @@ void Chat::on_Send_clicked()
     delete []buffer;
 }
 
+void Chat::closeEvent(QCloseEvent *event){
+    if(this->IsDisconnectedFromServer != true){
+        char buffer[2] = {'#','\0'};
+        send((*ConnectionDescriptor),buffer,3,0);
+        this->ListenThread->join();
+    }
+    ::close((*ConnectionDescriptor));
+    delete ConnectionDescriptor;
+    event->accept();
+}
 
 void Chat::on_textMessage_textChanged()
 {

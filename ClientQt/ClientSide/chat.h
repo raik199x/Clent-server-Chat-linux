@@ -32,6 +32,7 @@ private:
     QString Nickname;
     std::thread *ListenThread;
     bool IsDisconnectedFromServer;
+    void closeEvent(QCloseEvent *event);
 signals:
     void Disconnected();
     void ClearUsersOnline(char *buffer);

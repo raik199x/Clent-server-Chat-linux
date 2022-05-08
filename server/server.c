@@ -29,9 +29,9 @@ int addrlen = sizeof(address);
 
 void *WorkingWithClient(void *arg){
     struct Slots *clientSlots = (*(void **)arg);
-    printf("Info about new connection: %d - connection descriptor  %s - Nickname\n",clientSlots->ConnectionDescriptor, clientSlots->Nickname);
+    printf("Info about new connection: %d - connection descriptor  '%s' - Nickname\n",clientSlots->ConnectionDescriptor, clientSlots->Nickname);
     char *buffer = (char*)malloc(20);
-    //Sending everyone that new user joined chat
+    //preparing message about new client
     buffer[0] = 'A'; buffer[1] = 'D'; buffer[2] = 'D';
     for(int i = 3; clientSlots->Nickname[i-3] != '\0';i++){
         buffer[i] = clientSlots->Nickname[i-3];
@@ -39,9 +39,8 @@ void *WorkingWithClient(void *arg){
     }
     struct Slots *runner = clientSlots;
     //going to the first client
-    while(runner->left != NULL)
-        runner = runner->left;
-    //sending all client info about new client;
+    while(runner->left != NULL) runner = runner->left;
+    //Sending everyone that new user joined chat
     while(runner != NULL){
         if(runner->ConnectionDescriptor != -1){
             send(runner->ConnectionDescriptor,buffer,20,0);
@@ -52,13 +51,13 @@ void *WorkingWithClient(void *arg){
                    tempBuff[i] = runner->Nickname[i-3];
                    tempBuff[i+1] = '\0';
                 }
-                //sleep(1);
                 send(clientSlots->ConnectionDescriptor,tempBuff,20,0);
                 free(tempBuff);
             }
         }
         runner = runner->right;
     }
+    buffer[0] = 'D'; send(clientSlots->ConnectionDescriptor,buffer,1,0); //tell client that info about users online is over
     //message handler
     while(buffer[0] != '#'){
         free(buffer);
@@ -80,8 +79,7 @@ void *WorkingWithClient(void *arg){
             }
             //first of all, running to the start of users
             runner = clientSlots;
-            while(runner->left != NULL)
-                runner = runner->left;
+            while(runner->left != NULL) runner = runner->left;
             //now sending messages
             while(runner != NULL){
                 if(runner->ConnectionDescriptor != -1)
@@ -99,8 +97,7 @@ void *WorkingWithClient(void *arg){
         buffer[i] = clientSlots->Nickname[i-3];
         buffer[i+1] = '\0';
     }
-    while(runner->left != NULL)
-        runner = runner->left;
+    while(runner->left != NULL) runner = runner->left;
     while(runner != NULL){
         if(runner->ConnectionDescriptor != -1 && runner != clientSlots)
             send(runner->ConnectionDescriptor,buffer,20,0);
