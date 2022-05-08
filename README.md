@@ -35,12 +35,10 @@ but still, code contains all needs for translation to other languages
 ---
 
 Features:
-
     * You can chat (:D)
     * No limit for active connections
 
 How can be improved?
-
     * File transfer
     * Multiple languages
     * Encryption
@@ -55,5 +53,4 @@ Chat is a huge theme where you always find place to work, that was really intere
 Contacts:
 
 telegram: @raik199x
-
 mail: raik199x@mail.ru

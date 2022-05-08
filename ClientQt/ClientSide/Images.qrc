@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/Chat">
         <file>Images/Clients.jpeg</file>
+        <file>Images/ksis.jpeg</file>
     </qresource>
 </RCC>

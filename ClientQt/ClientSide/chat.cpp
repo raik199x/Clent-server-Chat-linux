@@ -123,8 +123,6 @@ Chat::~Chat()
 void Chat::on_logout_clicked(){
     if(this->IsDisconnectedFromServer == true){
         QMessageBox::warning(this,QObject::tr("Disconnected"), QObject::tr("You were disconnected from server"));
-        //::close((*ConnectionDescriptor));
-        //delete ConnectionDescriptor;
         qDebug() << "Forcefully disconnected";
     }
     close();
