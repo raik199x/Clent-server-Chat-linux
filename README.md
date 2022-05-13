@@ -60,6 +60,21 @@ How can be improved?
 
 ---
 
+Preview:
+
+Chat by itself
+![Screenshot_20220513_191318](https://user-images.githubusercontent.com/70070040/168325400-3ba0b088-90c9-43b6-ae41-eb01a1a6e61c.png)
+
+Tested on very old laptop
+![image](https://user-images.githubusercontent.com/70070040/168326984-e8646410-1aba-43cb-99f2-319457f1518f.png)
+
+server
+
+![Screenshot_20220513_192929](https://user-images.githubusercontent.com/70070040/168327272-47e91b80-6a2c-4839-94fa-d32b74ddf66a.png)
+
+
+---
+
 Chat is a huge theme where you always find place to work, that was really interesting work and i hope you also like it (or even improve).
 
 Contacts:
