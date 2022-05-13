@@ -26,6 +26,8 @@ private slots:
 
     void on_Recover_clicked();
 
+    void on_ipWrite_textChanged(const QString &arg1);
+
 private:
     Ui::MainWindow *ui;
 };

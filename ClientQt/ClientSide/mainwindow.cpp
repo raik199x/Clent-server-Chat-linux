@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     //Color theme
-    this->setFixedSize(QSize(550, 300));
+    this->setFixedSize(QSize(540, 330));
     this->setStyleSheet("color: #00FFFF; background-color: #2F4F4F");
 
     ui->LoginWrite->setPlaceholderText(tr("created by @raik199x"));
@@ -24,6 +24,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->PasswordWrite->setPlaceholderText("****************");
     ui->PasswordWrite->setStyleSheet("color: #00008B");
+
+    ui->ipWrite->setPlaceholderText(tr("127.0.0.1"));
+    ui->ipWrite->setText("127.0.0.1");
+    ui->ipWrite->setStyleSheet("color: #00FFFF");
 
     setWindowTitle(tr("Logging menu"));
     ui->LoginWrite->setMaxLength(16);
@@ -35,7 +39,6 @@ MainWindow::MainWindow(QWidget *parent)
     int x = (screenGeometry.width()-width()) / 2;
     int y = (screenGeometry.height()-height()) / 2;
     move(x, y);
-
 }
 
 MainWindow::~MainWindow(){
@@ -59,7 +62,7 @@ void MainWindow::on_PasswordWrite_textEdited(const QString &arg1){
 }
 
 void MainWindow::on_Register_clicked(){
-    Register *RegWindow = new Register;
+    Register *RegWindow = new Register(this,ui->ipWrite->text());
     hide();
     RegWindow->setModal(true);
     RegWindow->exec();
@@ -90,6 +93,9 @@ void MainWindow::on_Login_clicked(){
         QMessageBox::critical(this,QObject::tr("Error"), QObject::tr("Passwords contains forbidden symbols '~:"));
         ui->PasswordWrite->setStyleSheet("color: #F08080");
         return;
+    } else if(ui->ipWrite->text().length() > 20){
+        QMessageBox::critical(this,QObject::tr("Warning"), QObject::tr("Only ipv4 supported"));
+        ui->ipWrite->setStyleSheet("color: #F08080");
     }
 
     //asking server for registration
@@ -103,13 +109,17 @@ void MainWindow::on_Login_clicked(){
     server_adress.sin_family = AF_INET;
     server_adress.sin_port = htons(3002);
 
+    QString tempIp;
+    char *ip = new char[20]; tempIp = ui->ipWrite->text();
+    for(int i = 0; i < tempIp.length();i++){
+        ip[i] = tempIp[i].toLatin1();
+    }
     //Convert IPv4 and IPv6 addresses from text to binary
-    if (inet_pton(AF_INET, "127.0.0.1", &server_adress.sin_addr) <= 0){
+    if (inet_pton(AF_INET, ip, &server_adress.sin_addr) <= 0){
          QMessageBox::critical(this,QObject::tr("Error"), QObject::tr("Client error: Invalid address/ Address not supported"));
          delete ConnectionDescriptor;
          return;
     }
-
     if (::connect((*ConnectionDescriptor), (struct sockaddr*)&server_adress, sizeof(server_adress)) < 0) {
         QMessageBox::critical(this,QObject::tr("Error"), QObject::tr("Server error: Client couldnt connect to server"));
         delete ConnectionDescriptor;
@@ -155,9 +165,27 @@ void MainWindow::on_Login_clicked(){
 
 
 void MainWindow::on_Recover_clicked(){
-    RecoverData *window = new RecoverData;
+    if(ui->ipWrite->text().length() > 20){
+        QMessageBox::critical(this,QObject::tr("Warning"), QObject::tr("Only ipv4 supported"));
+        ui->ipWrite->setStyleSheet("color: #F08080");
+        return;
+    }
+    char *ip = new char[20];
+    QString temp = ui->ipWrite->text();
+    for(int i = 0; i < temp.length();i++)
+        ip[i] = temp[i].toLatin1();
+    RecoverData *window = new RecoverData(this,ip);
     window->setModal(true);
     window->exec();
+    delete []ip;
     delete window;
+}
+
+
+void MainWindow::on_ipWrite_textChanged(const QString &arg1){
+    if(arg1.isEmpty() == true)
+        ui->ipWrite->setStyleSheet("color: #00008B");
+    else
+        ui->ipWrite->setStyleSheet("color: #00FFFF");
 }
 

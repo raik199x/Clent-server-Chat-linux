@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>528</width>
-    <height>381</height>
+    <width>1015</width>
+    <height>649</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,16 +27,16 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
          <item>
-          <widget class="QLabel" name="LoginLabel">
+          <widget class="QLabel" name="conip">
            <property name="text">
-            <string>Nickname:</string>
+            <string>Con Ip:     </string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="LoginWrite"/>
+          <widget class="QLineEdit" name="ipWrite"/>
          </item>
         </layout>
        </item>
@@ -57,11 +57,25 @@
         </spacer>
        </item>
        <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QLabel" name="LoginLabel">
+           <property name="text">
+            <string>Nickname:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="LoginWrite"/>
+         </item>
+        </layout>
+       </item>
+       <item>
         <layout class="QHBoxLayout" name="horizontalLayout_4">
          <item>
           <widget class="QLabel" name="label">
            <property name="text">
-            <string> Password:</string>
+            <string>Password: </string>
            </property>
           </widget>
          </item>
@@ -159,7 +173,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>528</width>
+     <width>1015</width>
      <height>19</height>
     </rect>
    </property>

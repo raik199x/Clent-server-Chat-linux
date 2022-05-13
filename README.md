@@ -4,7 +4,7 @@ Course project for bsuir 4 semester
 Simple chat made on sockets (not QTcpSocket) that works on client->server methodology.
 Server written on bare C and client-side written on Qt+c\c++
 
-It works only on localhost and uses 3002 port for connections.
+It works only on localhost and uses 3002 port for connections, but for client side contains all needs for transfer to static ips etc.
 
 ---
 

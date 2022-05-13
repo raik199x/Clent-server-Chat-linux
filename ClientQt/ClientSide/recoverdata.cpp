@@ -6,7 +6,7 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 
-RecoverData::RecoverData(QWidget *parent) :
+RecoverData::RecoverData(QWidget *parent, char *ip) :
     QDialog(parent),
     ui(new Ui::RecoverData)
 {
@@ -15,6 +15,7 @@ RecoverData::RecoverData(QWidget *parent) :
     setWindowTitle(tr("Recover data"));
     ui->recoverykey->setMaxLength(400);
     ui->textEdit->setReadOnly(true);
+    this->ip = ip;
 }
 
 RecoverData::~RecoverData()
@@ -49,7 +50,7 @@ void RecoverData::on_Confirm_clicked(){
     server_adress.sin_port = htons(3002);
 
     //Convert IPv4 and IPv6 addresses from text to binary
-    if (inet_pton(AF_INET, "127.0.0.1", &server_adress.sin_addr) <= 0){
+    if (inet_pton(AF_INET, ip, &server_adress.sin_addr) <= 0){
          QMessageBox::critical(this,QObject::tr("Error"), QObject::tr("Client error: Invalid address/ Address not supported"));
          return;
     }

@@ -28,7 +28,7 @@
       <item>
        <widget class="QLabel" name="label">
         <property name="text">
-         <string>Enter recovery key:</string>
+         <string>Enter recovery key (connection ip taken from login page):</string>
         </property>
        </widget>
       </item>

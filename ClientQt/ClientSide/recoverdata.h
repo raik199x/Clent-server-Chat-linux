@@ -12,7 +12,7 @@ class RecoverData : public QDialog
     Q_OBJECT
 
 public:
-    explicit RecoverData(QWidget *parent = nullptr);
+    explicit RecoverData(QWidget *parent = nullptr, char *ip = nullptr);
     ~RecoverData();
 
 private slots:
@@ -21,6 +21,7 @@ private slots:
     void on_Confirm_clicked();
 
 private:
+    char *ip;
     Ui::RecoverData *ui;
 };
 

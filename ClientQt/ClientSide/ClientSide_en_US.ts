@@ -80,12 +80,12 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="chat.cpp" line="78"/>
+        <location filename="chat.cpp" line="125"/>
         <source>Disconnected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="chat.cpp" line="78"/>
+        <location filename="chat.cpp" line="125"/>
         <source>You were disconnected from server</source>
         <translation type="unfinished"></translation>
     </message>
@@ -227,7 +227,7 @@
     <message>
         <location filename="recoverdata.ui" line="14"/>
         <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Dialog</translation>
     </message>
     <message>
         <location filename="recoverdata.ui" line="31"/>
@@ -265,7 +265,7 @@
     <message>
         <location filename="recoveryconfirmation.ui" line="14"/>
         <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Dialog</translation>
     </message>
     <message>
         <location filename="recoveryconfirmation.ui" line="31"/>
@@ -310,7 +310,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="register.ui" line="31"/>
         <source>Nickname      </source>
-        <translation>Nickanem      </translation>
+        <translation>Nickname      </translation>
     </message>
     <message>
         <location filename="register.ui" line="45"/>

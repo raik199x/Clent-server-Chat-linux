@@ -5,7 +5,7 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 
-Register::Register(QWidget *parent) :
+Register::Register(QWidget *parent, QString conIp) :
     QDialog(parent),
     ui(new Ui::Register)
 {
@@ -15,6 +15,7 @@ Register::Register(QWidget *parent) :
     ui->NichnameWrite->setMaxLength(16);
     ui->PasswordWrite->setMaxLength(100);
     ui->RepPaswwordWrite->setMaxLength(100);
+    ui->ipWrite->setText(conIp);
 }
 
 Register::~Register(){
@@ -43,6 +44,9 @@ void Register::on_Confirm_clicked(){
     } else if(ui->PasswordWrite->text().contains(':') == true || ui->PasswordWrite->text().contains('~') == true){
         QMessageBox::critical(this,QObject::tr("Error"), QObject::tr("Passwords contains forbidden symbols '~:"));
         return;
+    } else if(ui->ipWrite->text().length() > 20){
+        QMessageBox::critical(this,QObject::tr("Warning"), QObject::tr("only ipv4 supported"));
+        return;
     }
     QString response;
 
@@ -57,11 +61,17 @@ void Register::on_Confirm_clicked(){
     server_adress.sin_port = htons(3002);
 
     //Convert IPv4 and IPv6 addresses from text to binary
-    if (inet_pton(AF_INET, "127.0.0.1", &server_adress.sin_addr) <= 0){
+    char *ip = new char[20]; response = ui->ipWrite->text();
+    for(int i = 0; i < response.length();i++){
+        ip[i] = response[i].toLatin1();
+    }
+    response.clear();
+    if (inet_pton(AF_INET, ip, &server_adress.sin_addr) <= 0){
          QMessageBox::critical(this,QObject::tr("Error"), QObject::tr("Client error: Invalid address/ Address not supported"));
+         delete []ip;
          return;
     }
-
+    delete []ip;
     if (::connect(RegSocket, (struct sockaddr*)&server_adress, sizeof(server_adress)) < 0) {
         QMessageBox::critical(this,QObject::tr("Error"), QObject::tr("Server error: Client couldnt connect to server"));
         return;
