@@ -1,10 +1,10 @@
 # Client-server-Chat-linux
-Course project for bsuir 4 semester
+Course project for [bsuir 4 semester](https://github.com/raik199x/BSUIR-labs)
 
 Simple chat made on sockets (not QTcpSocket) that works on client->server methodology.
-Server written on bare C and client-side written on Qt+c\c++
+Server written on bare C and client-side written on Qt + c\c++
 
-It works only on localhost and uses 3002 port for connections, but for client side contains all needs for transfer to static ips etc.
+It works only on localhost and uses 3002 port for connections, but client side contains all needs for transfer to static ips.
 
 ---
 
@@ -12,9 +12,7 @@ Installation:
 
 in folder Installation you'll find binary for server, is doesn't need to be installed, just run it.
 
-File ".run" should be runned as executable file, the program will exctract files for clien app, you'll find "*.sh" file that will run program
-
-Also if you need you can check cheksum.
+File ".run" should be runned as executable file, the program will exctract files for clien app, you'll find "*.sh" file that will run program.
 
 ---
 
@@ -48,6 +46,7 @@ Features:
 
     * You can chat (:D)
     * No limit for active connections
+    * Register nickname + Recover if needed
 
 How can be improved?
 
