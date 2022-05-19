@@ -140,13 +140,6 @@ int CheckAllFiles(){
     return 0;
 }
 
-void WelcomeMessage(){
-    printf("\n\nServer is active now\n"
-           "Made by raik199x\n"
-           "Ctrl+C to shutdown server\n");
-    return;
-}
-
 struct Slots *slots = NULL;
 
 void SigIntHandler(){
@@ -221,7 +214,9 @@ int main(int argc, char const* argv[]){
     AppendSlots(&slots);
     AppendSlots(&slots);
 
-    WelcomeMessage();
+    printf("\n\nServer is active now\n"
+           "Made by raik199x\n"
+           "Ctrl+C to shutdown server\n");
     while(1){
         char *buffer; int WaitClient = -1;
         if (listen(server_fd, 3) < 0) {
