@@ -6,6 +6,8 @@ Server written on bare C and client-side written on Qt + c\c++
 
 It works only on localhost and uses 3002 port for connections, but client side contains all needs for transfer to static ips.
 
+[paper work](https://mega.nz/folder/VfxllTwA#GR8gfJiDL-XTsHNyAjKoig)
+
 ---
 
 Installation:
