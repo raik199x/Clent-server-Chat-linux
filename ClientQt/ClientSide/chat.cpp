@@ -20,6 +20,8 @@ void Chat::RecMessage(){
     char buffer[500] = {'1'};
     //first we make Online users
     while(1){
+        for(int i = 0; i < 500; i++)
+            buffer[i] = '\0';
         recv((*ConnectionDescriptor),buffer,20,0);
         if(buffer[0] == 'D')
             break;
