@@ -14,7 +14,7 @@ Installation:
 
 in folder Installation you'll find binary for server, is doesn't need to be installed, just run it.
 
-File ".run" should be runned as executable file, the program will exctract files for clien app, you'll find "*.sh" file that will run program.
+File ".run" should be runned as executable file, the program will exctract files for client app, you'll find "*.sh" file that will run program.
 
 ---
 
